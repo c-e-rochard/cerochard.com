@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 1 — Code d’Inertie | C.E. Rochard</title>
+    <meta name="description" content="Guerre froide au sommet — Chapitre 1 de Code d’Inertie, roman cyberpunk de C.E. Rochard. Univers Olymos.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep:        #06060d;
+            --bg-dark:        #09091a;
+            --bg-card:        #0e0e1f;
+            --bg-card-border: #141430;
+            --cyan:           #00d4ff;
+            --cyan-dim:       rgba(0, 212, 255, 0.20);
+            --cyan-glow:      rgba(0, 212, 255, 0.07);
+            --violet:         #7c3aed;
+            --violet-dim:     rgba(124, 58, 237, 0.25);
+            --orange:         #ff6b35;
+            --orange-dim:     rgba(255, 107, 53, 0.20);
+            --red:            #ff3b5c;
+            --text-primary:   #e8e8f2;
+            --text-secondary: #8a8aaa;
+            --text-read:      #bcbcd2;
+            --text-muted:     #44445a;
+            --text-dim:       #2a2a42;
+            --border:         rgba(255,255,255,0.07);
+            --border-cyan:    rgba(0, 212, 255, 0.25);
+            --border-orange:  rgba(255, 107, 53, 0.25);
+            --font-title:     'Orbitron', monospace;
+            --font-body:      'Inter', sans-serif;
+        }
+        html.light {
+            --bg-deep: #d8d8e2; --bg-dark: #d0d0dc; --bg-card: #dcdce8;
+            --bg-card-border: #b8b8cc;
+            --cyan: #007a9e; --cyan-dim: rgba(0,122,158,0.15); --cyan-glow: rgba(0,122,158,0.07);
+            --violet: #5b21b6; --violet-dim: rgba(91,33,182,0.15);
+            --orange: #b84500; --orange-dim: rgba(184,69,0,0.12);
+            --red: #c0213c;
+            --text-primary: #12122a; --text-secondary: #38385a;
+            --text-read: #24243f;
+            --text-muted: #70709a; --text-dim: #9898b8;
+            --border: rgba(0,0,0,0.10); --border-cyan: rgba(0,122,158,0.28);
+            --border-orange: rgba(184,69,0,0.28);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg-deep); color: var(--text-primary);
+            font-family: var(--font-body); line-height: 1.75; overflow-x: hidden;
+        }
+
+        /* ── BARRE DE PROGRESSION DE LECTURE ── */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px;
+            background: var(--cyan); z-index: 1001; width: 0%;
+            transition: width 0.1s linear; pointer-events: none;
+            box-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem; background: rgba(6,6,13,0.94);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+        html.light .navbar { background: rgba(208,208,220,0.92); }
+        .nav-brand { font-family: var(--font-title); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 1.8rem; position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+        .nav-link { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .nav-link:hover, .nav-link.active { color: var(--cyan); }
+        .nav-classified { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.38rem 0.85rem; border-radius: 3px; text-decoration: none; white-space: nowrap; transition: all 0.2s ease; }
+        .nav-classified:hover { background: var(--orange-dim); }
+        .nav-status { display: flex; align-items: center; gap: 0.55rem; font-family: var(--font-title); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+        .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.35; transform:scale(0.75); } }
+
+        .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 6px; }
+        .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); transition: transform 0.25s ease, opacity 0.25s ease; }
+        .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+        .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .nav-mobile-overlay {
+            display: none; position: fixed; inset: 0; z-index: 999;
+            background: var(--bg-deep); flex-direction: column;
+            align-items: center; justify-content: center; gap: 1.6rem;
+            opacity: 0; transform: translateY(-12px);
+            transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+        .nav-mobile-overlay.open { display: flex; opacity: 1; transform: translateY(0); }
+        .nav-mobile-close { position: absolute; top: 1.4rem; right: 1.6rem; background: transparent; border: none; color: var(--cyan); font-size: 1.4rem; cursor: pointer; }
+        .nav-mobile-links { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+        .nav-mobile-link { font-family: var(--font-title); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; }
+        .nav-mobile-link.active, .nav-mobile-link:hover { color: var(--cyan); }
+        .nav-mobile-classified { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.6rem 1.2rem; border-radius: 3px; text-decoration: none; }
+
+        /* ── EN-TÊTE DU CHAPITRE ── */
+        .chapter-head {
+            max-width: 720px; margin: 0 auto;
+            padding: 8rem 2rem 0;
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: var(--font-title); font-size: 0.58rem;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--text-muted); text-decoration: none;
+            transition: color 0.2s ease; margin-bottom: 2.5rem;
+        }
+        .back-link:hover { color: var(--cyan); }
+        .chapter-eyebrow {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 1.2rem;
+        }
+        .chapter-num {
+            font-family: var(--font-title); font-size: 0.62rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.7rem;
+        }
+        .chapter-title {
+            font-family: var(--font-title); font-weight: 900;
+            font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+            line-height: 1.2; letter-spacing: 0.02em;
+            text-transform: uppercase; color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        /* Fiche technique — reprend le vocabulaire des dossiers Omnis */
+        .chapter-meta {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border); border-radius: 4px;
+            overflow: hidden; margin-bottom: 3.5rem;
+        }
+        .meta-cell { background: var(--bg-card); padding: 0.9rem 1rem; }
+        .meta-label {
+            font-family: var(--font-title); font-size: 0.46rem;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.35rem;
+        }
+        .meta-value {
+            font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; color: var(--cyan); letter-spacing: 0.04em;
+        }
+
+        /* ── CORPS DU TEXTE ── */
+        .chapter-body {
+            max-width: 660px; margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        .chapter-body p {
+            font-size: 1.06rem; line-height: 1.9;
+            color: var(--text-read); margin-bottom: 1.5rem;
+        }
+        .chapter-body p em { color: var(--text-primary); font-style: italic; }
+
+        /* Lettrine */
+        .chapter-body p.open { margin-bottom: 1.5rem; }
+        .chapter-body .cap {
+            float: left; font-family: var(--font-title); font-weight: 700;
+            font-size: 2.7rem; line-height: 0.9; color: var(--cyan);
+            padding: 0.35rem 0.65rem 0 0;
+        }
+
+        /* Répliques : léger retrait, texte plus clair */
+        .chapter-body p.dlg {
+            color: var(--text-primary);
+            padding-left: 1.1rem;
+            border-left: 1px solid rgba(0,212,255,0.14);
+        }
+
+        /* Interjections système — issues du manuscrit, pas ajoutées */
+        .chapter-body p.sys {
+            font-family: var(--font-title);
+            font-size: 0.72rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--cyan);
+            background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.85rem 1.1rem; margin: 2.2rem 0;
+            line-height: 1.6;
+        }
+
+        /* ── FIN DE CHAPITRE ── */
+        .chapter-end {
+            max-width: 660px; margin: 0 auto 5rem;
+            padding: 0 2rem;
+        }
+        .end-rule {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .end-rule::before, .end-rule::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .end-rule span {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); white-space: nowrap;
+        }
+        .end-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan);
+            border-radius: 4px; padding: 2rem 1.8rem;
+        }
+        .end-title {
+            font-family: var(--font-title); font-size: 0.9rem;
+            font-weight: 700; color: var(--text-primary);
+            margin-bottom: 0.8rem; letter-spacing: 0.04em;
+        }
+        .end-text {
+            font-size: 0.92rem; color: var(--text-secondary);
+            line-height: 1.8; margin-bottom: 1.6rem;
+        }
+        .end-text strong { color: var(--text-primary); font-weight: 500; }
+        .end-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .end-btn {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            font-family: var(--font-title); font-size: 0.62rem;
+            font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--cyan); border: 1px solid var(--cyan);
+            border-radius: 3px; padding: 0.72rem 1.4rem;
+            text-decoration: none; transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .end-btn:hover { background: var(--cyan-dim); box-shadow: 0 0 18px rgba(0,212,255,0.2); }
+        .end-btn.secondary { color: var(--text-muted); border-color: var(--border); }
+        .end-btn.secondary:hover { color: var(--text-secondary); background: transparent; box-shadow: none; }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--bg-dark); border-top: 1px solid var(--border);
+            padding: 2.8rem 2rem;
+        }
+        .footer-inner {
+            max-width: 900px; margin: 0 auto;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 1rem; text-align: center;
+        }
+        .footer-brand { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--cyan); text-transform: uppercase; }
+        .footer-nav { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+        .footer-nav a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .footer-nav a:hover { color: var(--text-secondary); }
+        .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-title); letter-spacing: 0.08em; }
+
+        /* ── THEME TOGGLE ── */
+        .theme-toggle {
+            position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 200;
+            width: 46px; height: 46px; border: 1px solid var(--border-cyan);
+            border-radius: 50%; background: var(--bg-card); color: var(--cyan);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; transition: all 0.3s ease;
+            backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .theme-toggle:hover { transform: scale(1.1); border-color: var(--cyan); }
+        .theme-toggle .icon-sun { display: inline; } .theme-toggle .icon-moon { display: none; }
+        html.light .theme-toggle .icon-sun { display: none; } html.light .theme-toggle .icon-moon { display: inline; }
+
+        /* ── PORTAIL C3 ── */
+        .gate-overlay {
+            display: none; position: fixed; inset: 0; z-index: 2000;
+            background: var(--bg-deep); backdrop-filter: blur(10px);
+            align-items: center; justify-content: center; padding: 1.5rem;
+        }
+        .gate-overlay.active { display: flex; }
+        body.locked .chapter-body,
+        body.locked .chapter-end { filter: blur(7px); opacity: 0.25; user-select: none; }
+        .gate-box {
+            max-width: 420px; width: 100%; background: var(--bg-card);
+            border: 1px solid var(--border-orange); border-radius: 5px; overflow: hidden;
+        }
+        .gate-top {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--border);
+        }
+        .gate-top-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulse-dot 1.2s ease infinite; }
+        .gate-top-label { font-family: var(--font-title); font-size: 0.46rem; white-space: nowrap; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+        .gate-body { padding: 2rem 1.8rem; }
+        .gate-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .gate-title { font-family: var(--font-title); font-size: 0.95rem; font-weight: 700; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+        .gate-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+        .gate-text strong { color: var(--text-primary); }
+        .gate-cta {
+            display: block; font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+            text-align: center; color: var(--bg-deep); background: var(--orange);
+            padding: 0.85rem 1.2rem; border-radius: 3px; text-decoration: none;
+            margin-bottom: 1rem; transition: box-shadow 0.25s ease;
+        }
+        .gate-cta:hover { box-shadow: 0 0 24px rgba(255,107,53,0.5); }
+        .gate-code { font-family: var(--font-title); font-size: 0.48rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); text-align: center; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .nav-links, .nav-status { display: none; }
+            .nav-hamburger { display: flex; }
+        }
+        @media (max-width: 640px) {
+            .chapter-head { padding: 6.5rem 1.5rem 0; }
+            .chapter-body, .chapter-end { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .chapter-meta { grid-template-columns: 1fr; }
+            .chapter-body p { font-size: 1rem; }
+            .footer-nav { gap: 1.1rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            html { scroll-behavior: auto; }
+        }
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--cyan); outline-offset: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- PORTAIL D’ACCRÉDITATION -->
+<div class="gate-overlay" id="gateOverlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-box">
+        <div class="gate-top">
+            <span class="gate-top-dot"></span>
+            <span class="gate-top-label">Omnis Corp · Contrôle d’accréditation · Terminal 7-C</span>
+        </div>
+        <div class="gate-body">
+            <div class="gate-icon">🔒</div>
+            <p class="gate-title" id="gateTitle">Accréditation C3 requise</p>
+            <p class="gate-text">
+                Le Chapitre 1 de <strong>Code d’Inertie</strong> est diffusé en avant-première
+                au <strong>Réseau prioritaire</strong>. Rejoignez la transmission pour
+                obtenir votre accréditation — l’accès est immédiat.
+            </p>
+            <a href="index.html#newsletter" class="gate-cta">Demander l’accréditation C3</a>
+            <p class="gate-code">ERR_AUTH · CODE 403 · DIFFUSION RESTREINTE</p>
+        </div>
+    </div>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar" aria-label="Navigation principale">
+    <a href="index.html" class="nav-brand">C.E.Rochard</a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">Univers</a>
+        <a href="roman.html" class="nav-link active" aria-current="page">Le Roman</a>
+        <a href="spin-off.html" class="nav-link">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-classified">🔒 Archives Classifiées</a>
+    </div>
+    <div class="nav-status">
+        <span class="nav-dot"></span>
+        Diffusion C3
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="nav-mobile-overlay" id="navMobileOverlay" aria-hidden="true">
+    <button class="nav-mobile-close" id="navMobileClose" aria-label="Fermer le menu">&#x2715;</button>
+    <div class="nav-mobile-links">
+        <a href="index.html" class="nav-mobile-link">Univers</a>
+        <a href="roman.html" class="nav-mobile-link active">Le Roman</a>
+        <a href="spin-off.html" class="nav-mobile-link">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-mobile-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-mobile-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-mobile-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-mobile-classified">🔒 Archives Classifiées</a>
+    </div>
+</div>
+
+<!-- EN-TÊTE -->
+<header class="chapter-head">
+    <a href="roman.html" class="back-link"><span>&#8592;</span> Retour au roman</a>
+    <div class="chapter-eyebrow">Code d’Inertie · Avant-première Réseau C3</div>
+    <div class="chapter-num">Chapitre 1</div>
+    <h1 class="chapter-title">Guerre froide au sommet</h1>
+
+    <div class="chapter-meta">
+        <div class="meta-cell">
+            <div class="meta-label">Point de vue</div>
+            <div class="meta-value">Aveline Kaas</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Localisation</div>
+            <div class="meta-value">Tour Synthetix · N70</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Classification</div>
+            <div class="meta-value">C3 · Restreint</div>
+        </div>
+    </div>
+</header>
+
+<!-- CORPS DU CHAPITRE -->
+<article class="chapter-body" id="chapterBody">
+        <p class="open"><span class="cap">L</span>’air pressurisé du sommet ne sentait rien. Vide. Un luxe inodore.</p>
+        <p>Derrière la paroi en polycarbonate, le Secteur 7 n’était plus qu’une masse sans relief. Les néons des Blocs y clignotaient encore par endroits, taches sales dans le Gris, les plus lointaines déjà effacées.</p>
+        <p>Aveline Kaas ajusta son débit d’oxygène. +2%. Le flux emplit ses poumons avec une douceur glaciale, presque addictive. Privilège de cadre supérieur d’Omnis : au-delà du soixante-dixième niveau, la respiration n’avait plus de palier tarifaire.</p>
+        <p>Dehors, dans les Blocs, le compteur tournait à la minute, sans interruption et sans plafond. Personne là-bas ne discutait un tarif : on le trouvait dans son HUD, déjà appliqué, sans expéditeur. Ici, à ce niveau, on le fixait. Une réévaluation signée en fin d’après-midi mettait moins d’une nuit à redescendre jusqu’au Secteur 7.</p>
+        <p>Une notification rouge clignota sur le jade noir du bureau.</p>
+        <p class="sys">Priorité exécutive Vitalis. Accès forcé.</p>
+        <p>Le sifflement pneumatique de la porte brisa la quiétude. Seul un membre du Directoire possédait les codes d’override pour entrer dans son sanctuaire sans invitation.</p>
+        <p>Les extracteurs sifflèrent à l’entrée de Stern. Purification automatique. Désinfection facturée à Vitalis. La division qui vendait l’air à la Ruche entière paierait pour qu’on nettoie celui de cette pièce, sali par son propre directeur. Radek Stern, fidèle à lui-même, ne vit pas la boucle.</p>
+        <p>Un pas lourd et irrégulier résonna sur les dalles de polymère. Trop de viande, pas assez de technologie.</p>
+        <p>Aveline ne se retourna pas : la paroi de polycarbonate lui renvoyait tout. Une masse congestionnée, luisante de sueur, brandissant une tablette. Colonnes de chiffres rouges. Anomalies de facturation.</p>
+        <p class="dlg">— Vous purgez le Sept, Kaas ?</p>
+        <p>Sa voix grésillait, malmenée par une ventilation de bas étage.</p>
+        <p class="dlg">— Mes quotas sont indexés sur l’occupation des zones. Vous videz le Sept, je perds cent quarante mille abonnements respiratoires d’un coup. Quinze pour cent de mes marges, Kaas. Facturés à personne.</p>
+        <p>Aveline ne cilla pas. Ses yeux, calibrés pour déceler la moindre micro-expression, scannèrent le tremblement de la main de l’homme, le rythme saccadé de sa carotide. Elle ne répondit pas par des mots. Son index glissa sur le jade. Fluide. Continu. Pas un tremblement. Le capteur biométrique enregistra sa commande.</p>
+        <p class="sys">Séquence de confinement engagée.</p>
+        <p>Un clic sourd vibra dans l’ossature en titane de la pièce. Les issues mécaniques se verrouillèrent, les joints d’étanchéité gonflèrent dans leurs rainures avec un grognement de caoutchouc comprimé. Le pare-feu physique venait d’isoler l’étage du reste de la Tour. Ils étaient désormais deux spectres enfermés dans un bocal de cristal.</p>
+        <p class="dlg">— Le Secteur 7 est obsolète, Stern, dit-elle d’une voix dont la neutralité était une insulte. Une gangrène qui consomme plus de ressources qu’elle n’en produit. On n’irrigue pas un membre infecté. On l’ampute.</p>
+        <p>Stern s’approcha, projetant l’interface de son écran dans l’espace séparant leurs visages. Les comptes truqués de la Tour apparurent en hologrammes tremblants : des volumes de filtration facturés deux fois, des crédits respiratoires fantômes réinjectés dans les lignes de maintenance de la haute direction. Les preuves de la corruption systémique d’Omnis.</p>
+        <p class="dlg">— Soit vous annulez la purge et vous me laissez mes cent quarante mille, soit ces fichiers atteignent le Conseil avant ce soir, cracha-t-il. Vous ne tomberez pas seule, Aveline.</p>
+        <p>Elle fixa les colonnes de chiffres. Le temps sembla s’étirer. Deux forces s’affrontaient. L’impulsion de l’éliminer et le risque qu’il ait programmé un envoi automatique. Stern mort, elle tomberait avec lui.</p>
+        <p>Son BPM monta à 66. L’implant, en régime manuel, attendait un ordre qu’elle ne donna pas. Quatre pulsations au-dessus de sa ligne de base, et elle redescendit seule.</p>
+        <p>La charge organique que Stern relâchait dans l’air dépassait ce que les filtres absorbaient sans surcoût. Un voyant discret l’indiqua sur le jade : cycle de purification renforcé, imputé au visiteur. Cette donnée-là, elle la classa.</p>
+        <p>D’un battement de paupière, elle projeta ses propres archives sur la paroi de polycarbonate. Le Secteur 7 disparut sous les colonnes. Pas les comptes truqués qu’il venait de brandir : les registres internes de Vitalis. Les détournements de Stern.</p>
+        <p>Les volumes qu’il déclarait livrés au Secteur 7 et que le Secteur 7 n’avait jamais reçus. L’écart recyclé en crédits, ligne après ligne, sur des comptes de maintenance qui n’entretenaient rien. Ses propres fantômes chiffrés. Les colonnes s’étalèrent en néons agressifs.</p>
+        <p>Stern ne cilla pas, mais ses mâchoires se verrouillèrent.</p>
+        <p class="dlg">— Destruction mutuelle assurée, dit-elle sans hausser le ton.</p>
+        <p class="dlg">— Joli spectacle, Kaas, lâcha-t-il d’une voix dont le calme la gifla. Mais un peu old school. Portez ça au Conseil. Ils nommeront un arbitre, l’arbitre prendra des mois, et vous n’avez pas des mois.</p>
+        <p class="dlg">— Le Conseil se soucie de la stabilité, pas de la vérité, dit Aveline. Vous voulez jouer au martyr des dividendes ? Jouons. Ou bien on règle ça maintenant.</p>
+        <p>Stern ajusta sa manchette, son cynisme suant par chaque pore de sa peau trop lisse, trop bien nourrie. Il n’avait pas l’air d’un homme acculé, mais d’un spectateur blasé devant un divertissement médiocre.</p>
+        <p class="dlg">— Si mon rythme cardiaque s’interrompt, ou même s’il descend sous les quarante pulsations, trois relais dormants en zone tampon S6-bis libèrent l’intégralité de ces données sur le réseau public, ainsi que vos propres protocoles d’exécution.</p>
+        <p>Aveline n’avait pas quitté son fauteuil depuis l’entrée de Stern. Sa main gauche descendit le long de l’accoudoir jusqu’à la console de gestion environnementale, encastrée dans le cuir. Accès biométrique direct : pas de chaîne de validation, pas de contreseing, sa peau suffisait à autoriser. Ses doigts trouvèrent l’interface haptique sans regarder. Le coût d’opération de la pièce s’afficha en surimpression rétinienne. 2,4 CR/min pour deux occupants. Une variable parmi d’autres.</p>
+        <p>En confinement, la pièce cessait d’être une pièce. Pressurisation, filtration, thermique : un caisson clos, une seule ligne au grand livre. Elle bascula cette ligne du compte du complexe vers le Bio-DRM de Stern. Puis elle multiplia le tarif par vingt. Le contrat de la pièce, lui, resta à son nom.</p>
+        <p>Le tarif appliqué était strictement légal. Le débit n’était pas coupé.</p>
+        <p>Le Bio-DRM de Stern émit une alerte de dépassement. Un bip court, répété, que le confinement rendait beaucoup trop présent. Son implant demanda l’autorisation de relever le débit. La réponse s’afficha. Titulaire du contrat : A. Kaas. Autorisation non accordée. Le débit tomba au plancher réglementaire. Stern avait de quoi payer ce tarif cent fois, et aucun moyen d’autoriser le paiement.</p>
+        <p>Aveline respirait comme avant. Son implant tirait sans rien demander à personne. En face, Stern suffoquait sur sa propre facture.</p>
+        <p>Il chancela. Ses mains cherchèrent le dossier du fauteuil visiteur et il s’y laissa tomber. Ses inspirations se hachèrent. Ses doigts labouraient le cuir des accoudoirs, cherchant un ancrage dans une pièce qui se dérobait.</p>
+        <p>Le confinement transformait la pièce en salle d’observation : elle surveillait ses occupants comme un bloc opératoire surveille un patient. Aveline lut les constantes de Stern en surimpression sur sa propre rétine. Saturation O2 : 79%. BPM : 134. Dilatation pupillaire compatible avec hypoxie modérée. L’hypoxie faisait monter le cœur, jamais descendre. À 134, Stern était à quatre-vingt-quatorze pulsations au-dessus de son seuil de libération.</p>
+        <p>Elle pouvait l’étrangler longtemps sans rien déclencher. Longtemps, pas indéfiniment. Un cœur qui lâche sous cette charge ne redescend pas par paliers : il tombe, et il traverse quarante en tombant. Rien sur l’écran ne disait où était ce point. Stern tint bon. Ses lèvres bleuirent, ses veines saillirent sur son cou comme des câbles sous tension, mais il maintint son regard ancré dans le sien. Un sourire haché par la suffocation étirait ses traits. Il savait où était le bord. Il s’en approchait exprès, parce qu’elle tomberait avec lui.</p>
+        <p>Le BPM d’Aveline monta à 69. Retour à 62 sans assistance. L’implant resta muet. Le levier physiologique avait échoué. Elle rétablit le tarif standard d’un geste. Le débit de Stern se normalisa. Le sifflement reprit. Stern inspira, râle rauque. La donnée fut archivée comme variable non-optimisée à reprendre ultérieurement.</p>
+        <p>Le silence revint, pesant. Elle avait rebasculé la ligne : chaque seconde de ce silence retombait de nouveau sur la facture de maintenance du complexe. Deux virgule quatre crédits la minute, pour deux occupants qui n’avaient plus rien à se dire. Sous les talons d’Aveline, soixante-dix niveaux de machinerie tenaient la Tour en pression. Les turbines de l’ossature s’écrasaient contre l’insonorisation et ne remontaient plus que sous la forme d’un râle mécanique étouffé, presque organique. Le Secteur 7, lui, ne produisait aucun son à cette hauteur. Le jade restait froid sous ses paumes. La pierre ne prenait jamais la température de la pièce.</p>
+        <p>En face d’elle, Stern se redressa dans son fauteuil, encore pâle, mais le dos droit, comme s’il effaçait d’un geste la scène d’hypoxie.</p>
+        <p class="dlg">— Les chiffres ne mentent pas, Stern.</p>
+        <p>Sa voix possédait la précision d’un scalpel, ce ton neutre des bourreaux qui ont délégué leur conscience à la comptabilité.</p>
+        <p class="dlg">— Nous accusons un manque à gagner de huit chiffres sur le dernier trimestre. Omnis exige une régularisation immédiate.</p>
+        <p>Stern croisa les bras, les jointures blanchies, mais le regard toujours accroché au sien.</p>
+        <p class="dlg">— Et vous suggérez quoi ? demanda Stern.</p>
+        <p class="dlg">— Un arbitrage.</p>
+        <p>D’un revers de main, elle projeta une fenêtre de données sur le jade. Une liste de profils défilait : techniciens de classe V0, dépendants médicaux, anomalies statistiques. Des fuites dans la tuyauterie. Des hémorragies de capital.</p>
+        <p>Son doigt pressa la surface froide, apposant sa signature biométrique sur deux séries distinctes. À chaque validation, l’interface haptique renvoyait un clic sec dans la pulpe. Un retour tactile ajouté par les concepteurs pour que les signataires sentent passer quelque chose. Elle en avait signé des centaines. Le geste ne changeait pas avec le nombre.</p>
+        <p>Deux gestes, deux échelles. D’abord le lot. Les soixante-dix Blocs du Secteur 7 reclassés d’un seul bloc en « erreur d’indexation ». Cent quarante mille dossiers. La Tour cesserait d’absorber une part de leur air brut : plein tarif. Aucun d’eux ne sortait pour autant du registre de Vitalis. Ils restaient facturés, et deviendraient débiteurs. La ligne de Stern ne bougeait pas d’un crédit.</p>
+        <p>Ensuite les ordres de saisie. Une douzaine, nominatifs, qui autorisaient les Nettoyeurs à venir prendre le débiteur lui-même. Chaque ordre portait en annexe ce qui serait récupéré au domicile : filtre de secours, compresseur de rechange, kit de survie. Elle valida sans lire les noms. L’un des dossiers portait une créance sur un module respiratoire pédiatrique.</p>
+        <p>Le sourire de Stern s’étira de travers, un côté du visage en retard sur l’autre, la sueur encore froide au bord de la mâchoire. C’était tout ce que ce visage savait encore produire en matière de satisfaction.</p>
+        <p class="dlg">— Un compromis acceptable, dit Stern. Vous avez signé, je vous ouvre les protocoles de débit du Secteur 7. Modules médicaux compris. Vous n’aurez plus besoin de Vitalis pour recalibrer un débit.</p>
+        <p>Il céda les protocoles du Secteur 7 sans négocier une seule ligne. On ne brade pas un outil dont on comprend l’usage : Stern venait de vendre quelque chose qu’il croyait accessoire, en gardant le doigt sur la détente de son chantage. Il achetait en échange un registre qui cesserait de payer dès que les convois descendraient. Elle ne le corrigea pas.</p>
+        <p>Aveline inclina la tête, scellant le pacte. Stern se leva sans un mot et quitta le bureau pour gagner l’antichambre.</p>
+        <p>Le programme de recouvrement tournait déjà. Personne ne descendrait au Secteur 7 pour appliquer la décision. Sa signature venait de changer un statut au registre, et chaque C4 lisait le statut de son porteur. Dans l’heure, cent quarante mille implants passeraient au plein tarif sans que personne ait à le leur dire. Les soldes tiendraient quelques jours. À zéro, les vannes se fermeraient de moitié, le Lag s’installerait, et la facturation continuerait. Omnis n’envoyait pas la contrainte vers le bas. Omnis l’avait posée des années plus tôt, à la quatrième vertèbre cervicale de chaque débiteur, et attendait.</p>
+        <p>Elle venait d’acheter le silence de Stern avec cent quarante mille respirations. Le taux de change lui parut correct. Le tarif s’appliquait selon la grille en vigueur.</p>
+        <p>Dans l’antichambre, Stern manipulait déjà sa tablette. Les données de leur confrontation défilaient sous ses doigts. Il effaçait les enregistrements audio, fragmentait les logs réseau, brouillait les horodatages.</p>
+        <p>Aveline ne voyait pas la tablette. Elle voyait les effacements arriver sur sa propre console, ligne après ligne. Il n’hésitait pas. Il ne cherchait pas quoi supprimer, il savait déjà, et l’ordre qu’il suivait ne laisserait rien à reconstituer. Stern avait préparé sa sortie avant d’entrer. Elle le nota et n’en fit rien.</p>
+        <p>Le sas entre le bureau et l’antichambre était resté ouvert. Sa voix porta sans qu’il ait besoin de la lever.</p>
+        <p class="dlg">— Combien de temps avant que le Conseil ne vous remplace ? demanda-t-il sans quitter sa tablette des yeux.</p>
+        <p>Elle ne répondit pas. Sur sa console, elle ouvrit la fiche de Radek Stern, division Vitalis, et modifia un champ de statut. Le système enregistra le changement. Il ne demanda pas de motif. Stern rangea la tablette et franchit le seuil avec le sourire d’un homme qui croit avoir gagné. Aveline le regarda disparaître. <em>Variable non-optimisée.</em></p>
+</article>
+
+<!-- FIN DE CHAPITRE -->
+<section class="chapter-end">
+    <div class="end-rule"><span>Fin du chapitre 1</span></div>
+    <div class="end-card">
+        <div class="end-title">La suite est en cours d’écriture</div>
+        <p class="end-text">
+            <strong>Code d’Inertie</strong> paraît en <strong>avril 2027</strong>.
+            Vous êtes sur le canal prioritaire : l’alerte de lancement et le lien
+            d’achat vous parviendront avant toute annonce publique.<br><br>
+            En attendant, le terrain d’Olymos est ouvert — la Ruche, ses sept
+            secteurs et le fonctionnement du Bio-DRM.
+        </p>
+        <div class="end-actions">
+            <a href="carte-secteurs.html" class="end-btn">Explorer la Ruche <span>&#8594;</span></a>
+            <a href="dossier-omnis.html" class="end-btn secondary">Archives classifiées</a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Olymos — C.E.Rochard</div>
+        <nav class="footer-nav" aria-label="Liens de pied de page">
+            <a href="index.html">Univers</a>
+            <a href="carte-secteurs.html">Carte</a>
+            <a href="chronologie.html">Chronologie</a>
+            <a href="profil-citoyen.html">Profil Citoyen</a>
+            <a href="roman.html">Le Roman</a>
+            <a href="spin-off.html">Le Spin-off</a>
+            <a href="dossier-omnis.html">Archives Classifiées</a>
+            <a href="a-propos.html">L’auteur</a>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="politique-confidentialite.html">Confidentialité</a>
+        </nav>
+        <p class="footer-copy">Copyright &copy; 2026 &mdash; C.E.Rochard. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème clair/sombre" aria-pressed="false" title="Basculer le thème">
+    <span class="icon-sun">&#9728;</span>
+    <span class="icon-moon">&#9790;</span>
+</button>
+
+<script>
+/* ── Accréditation C3 : activation par lien, puis contrôle ── */
+(function() {
+    var ok = false;
+    try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('acces') === 'c3') {
+            localStorage.setItem('olymos-acces', 'c3');
+            params.delete('acces');
+            var q = params.toString();
+            window.history.replaceState({}, '',
+                window.location.pathname + (q ? '?' + q : '') + window.location.hash);
+        }
+        ok = (localStorage.getItem('olymos-acces') === 'c3');
+    } catch (e) { ok = false; }
+
+    if (!ok) {
+        var overlay = document.getElementById('gateOverlay');
+        if (overlay) {
+            overlay.classList.add('active');
+            document.body.classList.add('locked');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+})();
+</script>
+
+<script>
+/* ── Thème clair / sombre ── */
+(function() {
+    var toggle = document.getElementById('themeToggle');
+    var saved = null;
+    try { saved = localStorage.getItem('dossier-theme'); } catch (e) {}
+    if (saved === 'light') {
+        document.documentElement.classList.add('light');
+        toggle.setAttribute('aria-pressed', 'true');
+    }
+    toggle.addEventListener('click', function() {
+        var isLight = document.documentElement.classList.toggle('light');
+        toggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        try { localStorage.setItem('dossier-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+    });
+})();
+</script>
+
+<script>
+/* ── Progression de lecture ── */
+(function() {
+    var bar = document.getElementById('progressBar');
+    var article = document.getElementById('chapterBody');
+    if (!bar || !article) return;
+
+    function update() {
+        var start = article.offsetTop;
+        var span = article.offsetHeight - window.innerHeight + 200;
+        var pos = window.scrollY - start + 200;
+        var pct = span > 0 ? (pos / span) * 100 : 0;
+        bar.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+})();
+</script>
+
+<script>
+/* ── Menu hamburger mobile ── */
+(function() {
+    var btn = document.getElementById('navHamburger');
+    var overlay = document.getElementById('navMobileOverlay');
+    if (!btn || !overlay) return;
+    function openMenu() {
+        btn.classList.add('open'); overlay.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+        btn.classList.remove('open'); overlay.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+    btn.addEventListener('click', function() {
+        btn.classList.contains('open') ? closeMenu() : openMenu();
+    });
+    var closeBtn = document.getElementById('navMobileClose');
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    overlay.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeMenu); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
+})();
+</script>
+
+</body>
+</html>
