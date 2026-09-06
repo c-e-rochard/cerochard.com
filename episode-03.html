@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Épisode 3 — Le Technicien Rebelle | Partitions Fantômes · C.E. Rochard</title>
+    <meta name="description" content="Épisode 3 du feuilleton Partitions Fantômes — Le Technicien Rebelle. Univers Olymos, huit ans avant Code d’Inertie.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --bg-deep:        #06060d;
+            --bg-dark:        #09091a;
+            --bg-card:        #0e0e1f;
+            --bg-card-border: #141430;
+            --cyan:           #00d4ff;
+            --cyan-dim:       rgba(0, 212, 255, 0.20);
+            --cyan-glow:      rgba(0, 212, 255, 0.07);
+            --violet:         #7c3aed;
+            --violet-dim:     rgba(124, 58, 237, 0.25);
+            --orange:         #ff6b35;
+            --orange-dim:     rgba(255, 107, 53, 0.20);
+            --red:            #ff3b5c;
+            --text-primary:   #e8e8f2;
+            --text-secondary: #8a8aaa;
+            --text-read:      #bcbcd2;
+            --text-muted:     #44445a;
+            --text-dim:       #2a2a42;
+            --border:         rgba(255,255,255,0.07);
+            --border-cyan:    rgba(0, 212, 255, 0.25);
+            --border-orange:  rgba(255, 107, 53, 0.25);
+            --font-title:     'Orbitron', monospace;
+            --font-body:      'Inter', sans-serif;
+        }
+        html.light {
+            --bg-deep: #d8d8e2; --bg-dark: #d0d0dc; --bg-card: #dcdce8;
+            --bg-card-border: #b8b8cc;
+            --cyan: #007a9e; --cyan-dim: rgba(0,122,158,0.15); --cyan-glow: rgba(0,122,158,0.07);
+            --violet: #5b21b6; --violet-dim: rgba(91,33,182,0.15);
+            --orange: #b84500; --orange-dim: rgba(184,69,0,0.12);
+            --red: #c0213c;
+            --text-primary: #12122a; --text-secondary: #38385a;
+            --text-read: #24243f;
+            --text-muted: #70709a; --text-dim: #9898b8;
+            --border: rgba(0,0,0,0.10); --border-cyan: rgba(0,122,158,0.28);
+            --border-orange: rgba(184,69,0,0.28);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg-deep); color: var(--text-primary);
+            font-family: var(--font-body); line-height: 1.75; overflow-x: hidden;
+        }
+
+        /* ── BARRE DE PROGRESSION DE LECTURE ── */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px;
+            background: var(--cyan); z-index: 1001; width: 0%;
+            transition: width 0.1s linear; pointer-events: none;
+            box-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem; background: rgba(6,6,13,0.94);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+        html.light .navbar { background: rgba(208,208,220,0.92); }
+        .nav-brand { font-family: var(--font-title); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 1.8rem; position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+        .nav-link { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .nav-link:hover, .nav-link.active { color: var(--cyan); }
+        .nav-classified { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.38rem 0.85rem; border-radius: 3px; text-decoration: none; white-space: nowrap; transition: all 0.2s ease; }
+        .nav-classified:hover { background: var(--orange-dim); }
+        .nav-status { display: flex; align-items: center; gap: 0.55rem; font-family: var(--font-title); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+        .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.35; transform:scale(0.75); } }
+
+        .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 6px; }
+        .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); transition: transform 0.25s ease, opacity 0.25s ease; }
+        .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+        .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .nav-mobile-overlay {
+            display: none; position: fixed; inset: 0; z-index: 999;
+            background: var(--bg-deep); flex-direction: column;
+            align-items: center; justify-content: center; gap: 1.6rem;
+            opacity: 0; transform: translateY(-12px);
+            transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+        .nav-mobile-overlay.open { display: flex; opacity: 1; transform: translateY(0); }
+        .nav-mobile-close { position: absolute; top: 1.4rem; right: 1.6rem; background: transparent; border: none; color: var(--cyan); font-size: 1.4rem; cursor: pointer; }
+        .nav-mobile-links { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+        .nav-mobile-link { font-family: var(--font-title); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; }
+        .nav-mobile-link.active, .nav-mobile-link:hover { color: var(--cyan); }
+        .nav-mobile-classified { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.6rem 1.2rem; border-radius: 3px; text-decoration: none; }
+
+        /* ── EN-TÊTE DU CHAPITRE ── */
+        .chapter-head {
+            max-width: 720px; margin: 0 auto;
+            padding: 8rem 2rem 0;
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: var(--font-title); font-size: 0.58rem;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--text-muted); text-decoration: none;
+            transition: color 0.2s ease; margin-bottom: 2.5rem;
+        }
+        .back-link:hover { color: var(--cyan); }
+        .chapter-eyebrow {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 1.2rem;
+        }
+        .chapter-num {
+            font-family: var(--font-title); font-size: 0.62rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.7rem;
+        }
+        .chapter-title {
+            font-family: var(--font-title); font-weight: 900;
+            font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+            line-height: 1.2; letter-spacing: 0.02em;
+            text-transform: uppercase; color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        /* Fiche technique — reprend le vocabulaire des dossiers Omnis */
+        .chapter-meta {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border); border-radius: 4px;
+            overflow: hidden; margin-bottom: 3.5rem;
+        }
+        .meta-cell { background: var(--bg-card); padding: 0.9rem 1rem; }
+        .meta-label {
+            font-family: var(--font-title); font-size: 0.46rem;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.35rem;
+        }
+        .meta-value {
+            font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; color: var(--cyan); letter-spacing: 0.04em;
+        }
+
+        /* ── CORPS DU TEXTE ── */
+        .chapter-body {
+            max-width: 660px; margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        .chapter-body p {
+            font-size: 1.06rem; line-height: 1.9;
+            color: var(--text-read); margin-bottom: 1.5rem;
+        }
+        .chapter-body p em { color: var(--text-primary); font-style: italic; }
+
+        /* Lettrine */
+        .chapter-body p.open { margin-bottom: 1.5rem; }
+        .chapter-body .cap {
+            float: left; font-family: var(--font-title); font-weight: 700;
+            font-size: 2.7rem; line-height: 0.9; color: var(--cyan);
+            padding: 0.35rem 0.65rem 0 0;
+        }
+
+        /* Répliques : léger retrait, texte plus clair */
+        .chapter-body p.dlg {
+            color: var(--text-primary);
+            padding-left: 1.1rem;
+            border-left: 1px solid rgba(0,212,255,0.14);
+        }
+
+        /* Interjections système — issues du manuscrit, pas ajoutées */
+        .chapter-body p.sys {
+            font-family: var(--font-title);
+            font-size: 0.72rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--cyan);
+            background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.85rem 1.1rem; margin: 2.2rem 0;
+            line-height: 1.6;
+        }
+
+        /* ── FIN DE CHAPITRE ── */
+        .chapter-end {
+            max-width: 660px; margin: 0 auto 5rem;
+            padding: 0 2rem;
+        }
+        .end-rule {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .end-rule::before, .end-rule::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .end-rule span {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); white-space: nowrap;
+        }
+        .end-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan);
+            border-radius: 4px; padding: 2rem 1.8rem;
+        }
+        .end-title {
+            font-family: var(--font-title); font-size: 0.9rem;
+            font-weight: 700; color: var(--text-primary);
+            margin-bottom: 0.8rem; letter-spacing: 0.04em;
+        }
+        .end-text {
+            font-size: 0.92rem; color: var(--text-secondary);
+            line-height: 1.8; margin-bottom: 1.6rem;
+        }
+        .end-text strong { color: var(--text-primary); font-weight: 500; }
+        .end-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .end-btn {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            font-family: var(--font-title); font-size: 0.62rem;
+            font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--cyan); border: 1px solid var(--cyan);
+            border-radius: 3px; padding: 0.72rem 1.4rem;
+            text-decoration: none; transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .end-btn:hover { background: var(--cyan-dim); box-shadow: 0 0 18px rgba(0,212,255,0.2); }
+        .end-btn.secondary { color: var(--text-muted); border-color: var(--border); }
+        .end-btn.secondary:hover { color: var(--text-secondary); background: transparent; box-shadow: none; }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--bg-dark); border-top: 1px solid var(--border);
+            padding: 2.8rem 2rem;
+        }
+        .footer-inner {
+            max-width: 900px; margin: 0 auto;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 1rem; text-align: center;
+        }
+        .footer-brand { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--cyan); text-transform: uppercase; }
+        .footer-nav { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+        .footer-nav a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .footer-nav a:hover { color: var(--text-secondary); }
+        .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-title); letter-spacing: 0.08em; }
+
+        /* ── THEME TOGGLE ── */
+        .theme-toggle {
+            position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 200;
+            width: 46px; height: 46px; border: 1px solid var(--border-cyan);
+            border-radius: 50%; background: var(--bg-card); color: var(--cyan);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; transition: all 0.3s ease;
+            backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .theme-toggle:hover { transform: scale(1.1); border-color: var(--cyan); }
+        .theme-toggle .icon-sun { display: inline; } .theme-toggle .icon-moon { display: none; }
+        html.light .theme-toggle .icon-sun { display: none; } html.light .theme-toggle .icon-moon { display: inline; }
+
+        /* ── PORTAIL C3 ── */
+        .gate-overlay {
+            display: none; position: fixed; inset: 0; z-index: 2000;
+            background: var(--bg-deep); backdrop-filter: blur(10px);
+            align-items: center; justify-content: center; padding: 1.5rem;
+        }
+        .gate-overlay.active { display: flex; }
+        body.locked .chapter-body,
+        body.locked .chapter-end { filter: blur(7px); opacity: 0.25; user-select: none; }
+        .gate-box {
+            max-width: 420px; width: 100%; background: var(--bg-card);
+            border: 1px solid var(--border-orange); border-radius: 5px; overflow: hidden;
+        }
+        .gate-top {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--border);
+        }
+        .gate-top-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulse-dot 1.2s ease infinite; }
+        .gate-top-label { font-family: var(--font-title); font-size: 0.46rem; white-space: nowrap; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+        .gate-body { padding: 2rem 1.8rem; }
+        .gate-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .gate-title { font-family: var(--font-title); font-size: 0.95rem; font-weight: 700; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+        .gate-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+        .gate-text strong { color: var(--text-primary); }
+        .gate-cta {
+            display: block; font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+            text-align: center; color: var(--bg-deep); background: var(--orange);
+            padding: 0.85rem 1.2rem; border-radius: 3px; text-decoration: none;
+            margin-bottom: 1rem; transition: box-shadow 0.25s ease;
+        }
+        .gate-cta:hover { box-shadow: 0 0 24px rgba(255,107,53,0.5); }
+        .gate-code { font-family: var(--font-title); font-size: 0.48rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); text-align: center; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .nav-links, .nav-status { display: none; }
+            .nav-hamburger { display: flex; }
+        }
+        @media (max-width: 640px) {
+            .chapter-head { padding: 6.5rem 1.5rem 0; }
+            .chapter-body, .chapter-end { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .chapter-meta { grid-template-columns: 1fr; }
+            .chapter-body p { font-size: 1rem; }
+            .footer-nav { gap: 1.1rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            html { scroll-behavior: auto; }
+        }
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--cyan); outline-offset: 3px;
+        }
+    
+
+        /* ── Éléments feuilleton (Partitions Fantômes) ── */
+        .chapter-body p.hud {
+            color: var(--cyan); background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.65rem 1.1rem; font-size: 0.98rem;
+        }
+        .chapter-body p.hud em { color: var(--cyan); }
+        .poster {
+            border: 1px solid var(--border-cyan); background: var(--bg-card);
+            border-radius: 4px; padding: 1.4rem 1.5rem; margin: 2.2rem 0;
+            text-align: center;
+        }
+        .poster p {
+            font-family: var(--font-title); font-size: 0.64rem;
+            letter-spacing: 0.12em; color: var(--text-secondary);
+            line-height: 2; margin-bottom: 0.35rem;
+        }
+        .poster p:first-child { color: var(--cyan); font-size: 0.7rem; }
+        .poster p:last-child { margin-bottom: 0; }
+        .registre-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan); border-radius: 4px;
+            padding: 1.8rem; margin-bottom: 2.2rem;
+        }
+        .registre-title {
+            font-family: var(--font-title); font-size: 0.76rem; font-weight: 700;
+            color: var(--cyan); letter-spacing: 0.07em; margin-bottom: 1.1rem;
+        }
+        .registre-card p {
+            font-size: 0.92rem; color: var(--text-secondary); font-style: italic;
+            line-height: 1.8; margin-bottom: 0.55rem;
+        }
+        .registre-card p:last-child { margin-bottom: 0; }
+        .ep-banner { text-align: center; margin-bottom: 2.6rem; }
+        .ep-banner p { font-size: 0.85rem; color: var(--text-muted); font-style: italic; line-height: 1.9; }
+        .ep-banner strong { color: var(--text-secondary); font-weight: 500; }
+        .ep-copyright { text-align: center; font-family: var(--font-title);
+            font-size: 0.6rem; letter-spacing: 0.12em; color: var(--text-muted);
+            margin: 0 0 2.2rem; line-height: 1.7; }
+        .ep-nav { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: space-between; }
+        .ep-nav .spacer { flex: 1; }
+
+        /* ── Journal du Constructeur (archive C3) ── */
+        .journal {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 4px; margin-bottom: 2.2rem; overflow: hidden;
+        }
+        .journal[open] { border-color: var(--border-cyan); }
+        .journal > summary {
+            list-style: none; cursor: pointer; padding: 1.15rem 1.5rem;
+            display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap;
+        }
+        .journal > summary::-webkit-details-marker { display: none; }
+        .journal > summary:hover { background: rgba(255,255,255,0.03); }
+        .journal > summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+        .journal-label {
+            font-family: var(--font-title); font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.09em; color: var(--cyan); text-transform: uppercase;
+        }
+        .journal-hint {
+            font-size: 0.78rem; color: var(--text-muted); font-style: italic;
+        }
+        .journal-chevron {
+            margin-left: auto; color: var(--text-muted); font-size: 0.85rem;
+            transition: transform 0.2s ease;
+        }
+        .journal[open] .journal-chevron { transform: rotate(180deg); }
+        .journal-body {
+            padding: 0 1.5rem 1.6rem; border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .journal-body p {
+            font-size: 0.95rem; color: var(--text-secondary);
+            line-height: 1.85; margin: 1.2rem 0 0;
+        }
+        .journal-sign {
+            font-family: var(--font-title); font-size: 0.66rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--text-muted); margin-top: 1.5rem;
+        }
+        @media (max-width: 640px) {
+            .journal > summary { padding: 1rem 1.1rem; }
+            .journal-body { padding: 0 1.1rem 1.3rem; }
+            .journal-hint { flex-basis: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- PORTAIL D’ACCRÉDITATION -->
+<div class="gate-overlay" id="gateOverlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-box">
+        <div class="gate-top">
+            <span class="gate-top-dot"></span>
+            <span class="gate-top-label">Omnis Corp · Contrôle d’accréditation · Terminal 7-C</span>
+        </div>
+        <div class="gate-body">
+            <div class="gate-icon">🔒</div>
+            <p class="gate-title" id="gateTitle">Accréditation C3 requise</p>
+            <p class="gate-text">
+                L’Épisode 3 de <strong>Partitions Fantômes</strong> est diffusé en avant-première
+                au <strong>Réseau prioritaire</strong>. Rejoignez la transmission pour
+                obtenir votre accréditation — l’accès est immédiat.<br><br>
+                À partir du <strong>13 sept. 2026</strong>, l’épisode est aussi en lecture
+                libre sur Wattpad, Nocteller et Purrfiction.
+            </p>
+            <a href="index.html#newsletter" class="gate-cta">Demander l’accréditation C3</a>
+            <p class="gate-code">ERR_AUTH · CODE 403 · DIFFUSION RESTREINTE</p>
+        </div>
+    </div>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar" aria-label="Navigation principale">
+    <a href="index.html" class="nav-brand">C.E.Rochard</a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">Univers</a>
+        <a href="roman.html" class="nav-link">Le Roman</a>
+        <a href="spin-off.html" class="nav-link active" aria-current="page">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-classified">🔒 Archives Classifiées</a>
+    </div>
+    <div class="nav-status">
+        <span class="nav-dot"></span>
+        Diffusion C3
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="nav-mobile-overlay" id="navMobileOverlay" aria-hidden="true">
+    <button class="nav-mobile-close" id="navMobileClose" aria-label="Fermer le menu">&#x2715;</button>
+    <div class="nav-mobile-links">
+        <a href="index.html" class="nav-mobile-link">Univers</a>
+        <a href="roman.html" class="nav-mobile-link">Le Roman</a>
+        <a href="spin-off.html" class="nav-mobile-link active">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-mobile-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-mobile-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-mobile-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-mobile-classified">🔒 Archives Classifiées</a>
+    </div>
+</div>
+
+<!-- EN-TÊTE -->
+<header class="chapter-head">
+    <a href="transmissions.html" class="back-link"><span>&#8592;</span> Sommaire du feuilleton</a>
+    <div class="chapter-eyebrow">Partitions Fantômes · Avant-première Réseau C3</div>
+    <div class="chapter-num">Épisode 3</div>
+    <h1 class="chapter-title">Le Technicien Rebelle</h1>
+
+    <div class="chapter-meta">
+        <div class="meta-cell">
+            <div class="meta-label">Registre</div>
+            <div class="meta-value">Entrée #3</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Localisation</div>
+            <div class="meta-value">Niveau 50 · Atelier</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Sortie publique</div>
+            <div class="meta-value">13 sept. 2026</div>
+        </div>
+    </div>
+</header>
+
+<!-- CORPS DE L’ÉPISODE -->
+<article class="chapter-body" id="chapterBody">
+        <p class="open"><span class="cap">L</span>e gamin entra en tenant sa gorge à deux mains.</p>
+        <p>Pas la peau. Le métal en dessous. Les doigts serrés autour de la gorge, là où les vannes bronchiques couraient sous le derme.</p>
+        <p>Drev entendait le sifflement depuis l’établi. Pas un sifflement de masque, celui-là venait de l’intérieur.</p>
+        <p class="hud"><em>Solde : 72 CR. Dette : 330. Lag : 0,5s.</em></p>
+        <p class="dlg">— Assieds-toi.</p>
+        <p>Le gamin obéit. Vingt ans, peut-être vingt-deux. Combinaison de technicien, badge arraché à l’épaule, volontairement vu les fils coupés nets. Mains noircies d’huile de moteur, pas de graisse de conduit. Un mécano de ventilation. Niveau 45, peut-être 48.</p>
+        <p class="dlg">— Lâche ta gorge.</p>
+        <p class="dlg">— Si je lâche, ça siffle plus fort.</p>
+        <p class="dlg">— Si tu lâches pas, je vois rien.</p>
+        <p>Le gamin desserra les doigts. Le sifflement grimpa d’un cran, au-dessus de 480 Hz. Une vanne bronchique en surpression.</p>
+        <p>Drev enfila ses gants et palpa le cou à mi-hauteur. Les vannes étaient gonflées. Dures sous la peau, comme deux billes de roulement coincées de part et d’autre de la trachée.</p>
+        <p class="dlg">— Normalement, c’est souple, dit Drev. Des clapets qui s’ouvrent à l’inspiration, se ferment à l’expiration. Ta puce les pilote.</p>
+        <p class="dlg">— Et là ?</p>
+        <p class="dlg">— Là, c’est dur. T’as fait quoi ?</p>
+        <p>Le gamin ne répondit pas. Drev pressa la vanne droite. Le sifflement monta. Le gamin grimaça.</p>
+        <p class="dlg">— T’as fait quoi ?</p>
+        <p class="dlg">— Un bypass.</p>
+        <p>Drev retira ses doigts. S’assit sur le tabouret.</p>
+        <p class="dlg">— Répète.</p>
+        <p class="dlg">— Un bypass. Sur la vanne droite. Pour la bloquer en position ouverte. Plus de clapet, plus de dosage, plus de facturation. L’air passe direct.</p>
+        <p class="dlg">— Et tu l’as trouvé où, ce bypass ?</p>
+        <p class="dlg">— Un type au Marché Gris. Il vendait le schéma pour trente crédits.</p>
+        <p>Trente crédits pour un schéma de bypass bronchique. Drev connaissait le tarif. Il connaissait aussi le résultat. Il brancha le câble entre la nuque du gamin et son orbite. Le connecteur cliqua contre l’os. La lentille fissurée cracha les données.</p>
+        <p><em>Patient : V0. Dette : 280 CR. Lag base : 0,5s. Pression vanne droite : 3,2 atm. Seuil nominal : 1,0 atm. Temp. C4 : 37,9°C.</em></p>
+        <p>Trois virgule deux. Plus de trois fois la pression normale. La température du boîtier était haute aussi, 0,4°C au-dessus du profil constructeur pour un implant à moins de cinq cents de dette. Variance de lot. Il avait un clapet en surpression à régler d’abord.</p>
+        <p class="dlg">— T’as un problème, dit Drev.</p>
+        <p class="dlg">— Sans déconner.</p>
+        <p class="dlg">— Non, t’as un vrai problème. Le bypass a bloqué la vanne en ouverture forcée. L’air entre, mais le clapet de sortie fonctionne toujours.</p>
+        <p class="dlg">— Et alors ?</p>
+        <p class="dlg">— Ta puce régule l’expiration normalement. Elle sait pas que l’entrée est ouverte en permanence. L’air rentre plus vite qu’il sort.</p>
+        <p class="dlg">— Et alors ?</p>
+        <p class="dlg">— Alors la pression monte. C’est le coup de bélier.</p>
+        <p>Le gamin le regarda sans comprendre.</p>
+        <p class="dlg">— Les tuyaux, dit Drev. Tu bosses dans la ventilation. Tu sais ce qui se passe quand tu fermes une vanne trop vite sur un conduit pressurisé.</p>
+        <p>Le gamin pâlit. Il savait.</p>
+        <p class="dlg">— L’onde de pression remonte, dit-il. Elle tape le coude du conduit. Le joint saute.</p>
+        <p class="dlg">— Là, c’est pareil. Sauf que le conduit, c’est ta bronche. Et le joint qui saute, c’est ta vanne bronchique qui éclate dans ta trachée. Hémorragie interne. Le sang remplit les poumons. T’as entre deux et quatre minutes.</p>
+        <p>Le sifflement emplissait l’atelier. Régulier. Montant.</p>
+        <p class="dlg">— C’est à combien maintenant ?</p>
+        <p>Drev consulta la lentille.</p>
+        <p class="dlg">— Trois virgule deux atmosphères. Le seuil de rupture est à quatre. Peut-être quatre et demie pour une vanne neuve. Le silicone durcit avec le temps. T’es implanté depuis quand ?</p>
+        <p class="dlg">— Trois mois.</p>
+        <p class="dlg">— Alors le matériau est encore souple. T’as de la marge. Pas beaucoup.</p>
+        <p>Drev calcula. La pression montait d’environ 0,1 atmosphère toutes les cinq minutes. Vingt à trente minutes avant la zone critique. Pas de quoi paniquer. Pas de quoi traîner non plus.</p>
+        <p class="dlg">— Le bypass, c’est quoi ? Câble ? Shunt ?</p>
+        <p class="dlg">— Fil de cuivre. Soudé entre les deux bornes du clapet.</p>
+        <p class="dlg">— T’as ouvert comment ?</p>
+        <p class="dlg">— Incision. Sous le cartilage. Le schéma montrait le point d’accès.</p>
+        <p>Drev regarda la gorge du gamin. Une cicatrice fine, un centimètre, déjà refermée au dermagel. Du travail de mécano. Pas propre, mais précis.</p>
+        <p>Drev ferma les yeux une seconde. Un fil de cuivre soudé entre les deux bornes d’un clapet pneumatique biologique, le genre de réparation qu’un mécano de ventilation pouvait tenter dans un atelier du Secteur 7 avec les outils qu’il avait sous la main et la conviction que le schéma à trente crédits disait vrai.</p>
+        <p>C’était comme réparer une artère avec du fil de fer.</p>
+        <p class="dlg">— Je peux le retirer. Mais faut que la vanne soit en sous-pression pour ça. Si j’arrache le fil à trois atmosphères, le clapet claque d’un coup et l’onde de choc te déchire le cartilage trachéal.</p>
+        <p class="dlg">— Et comment tu mets en sous-pression ?</p>
+        <p class="dlg">— Tu respires pas.</p>
+        <p>Silence.</p>
+        <p class="dlg">— Combien de temps ?</p>
+        <p class="dlg">— Trente secondes. Quarante si t’es résistant.</p>
+        <p>Le gamin déglutit. Le sifflement ne s’arrêtait pas.</p>
+        <p>La porte de l’atelier grinça. Une silhouette se glissa dans l’encadrement, petite, nerveuse, capuche enfoncée jusqu’aux yeux. Syl. Vendeuse de filtres au Marché Gris. Elle sentait l’ozone et le plastique brûlé, comme à chaque fois.</p>
+        <p class="dlg">— Je dérange ?</p>
+        <p class="dlg">— Oui.</p>
+        <p class="dlg">— Tant mieux. J’ai tes filtres.</p>
+        <p>Elle posa un sac en toile sur le coin de l’établi. Jeta un regard au gamin. Au sifflement. Aux gants de Drev.</p>
+        <p class="dlg">— Il siffle de l’intérieur, celui-là.</p>
+        <p class="dlg">— T’es médecin maintenant ?</p>
+        <p class="dlg">— J’ai pas besoin d’être médecin. Quand ça siffle de l’intérieur, c’est qu’il a touché aux vannes.</p>
+        <p>Syl s’appuya contre la cloison. Croisa les bras.</p>
+        <p class="dlg">— T’es le troisième ce mois-ci, dit-elle au gamin. Y’a un malin qui vend des bypass au Gris depuis trois semaines. Trente crédits le schéma. Les deux premiers sont pas revenus.</p>
+        <p>Le gamin ne dit rien. Ses mains agrippaient ses genoux.</p>
+        <p class="dlg">— Pas revenus où ? demanda Drev sans lever les yeux.</p>
+        <p class="dlg">— Nulle part. Disparus. Ou morts dans un coin du Conduit. Qui irait vérifier ?</p>
+        <p>Quelqu’un toussa dans le couloir. Grasse. Rosâtre dans le son. La Chantilly de quelqu’un d’autre.</p>
+        <p>Syl tira un filtre du sac et l’examina contre la lumière. Gris foncé, mais pas bouché.</p>
+        <p class="dlg">— Au fait, dit-elle. T’as vu la nouvelle tournée ?</p>
+        <p class="dlg">— Quelle tournée ?</p>
+        <p class="dlg">— Les vaccinations. Ils descendent au Secteur 7 la semaine prochaine. Clinique mobile. Tout gratuit. Masque, filtres, sourire compris.</p>
+        <p class="dlg">— Le sourire, c’est un supplément.</p>
+        <p class="dlg">— Ils appellent ça le SAR. Mon cul. C’est la Peste de la Ruche, un point c’est tout. Ma grand-mère en crevait déjà trente ans avant que ces types inventent un sigle.</p>
+        <p>Drev ne répondit pas. Il préparait l’extracteur pneumatique, micro-valve de précision et tuyau d’aspiration capillaire.</p>
+        <p class="dlg">— Qu’est-ce que vous allez faire ? dit le gamin.</p>
+        <p class="dlg">— Créer une dépression locale autour de ta vanne pour abaisser la pression. Ensuite je retire le fil.</p>
+        <p class="dlg">— C’est simple ?</p>
+        <p class="dlg">— L’idée, oui. En pratique, ça veut dire enfoncer une aiguille entre deux cartilages, trouver ton bypass à l’aveugle, et arracher un fil soudé sans toucher le clapet.</p>
+        <p>Il tourna la tête vers la cloison.</p>
+        <p class="dlg">— Syl.</p>
+        <p class="dlg">— Quoi ?</p>
+        <p class="dlg">— Dehors.</p>
+        <p class="dlg">— Je regarde.</p>
+        <p class="dlg">— Dehors.</p>
+        <p>Syl haussa les épaules et ramassa son sac. Laissa les filtres sur l’établi.</p>
+        <p class="dlg">— Y’a un type dans le couloir qui attend, dit-elle en sortant. Masque crevé. Il a l’air pressé.</p>
+        <p>Drev l’entendit. L’autre patient. Le sifflement d’un masque à vingt, vingt-cinq pour cent de fuite, derrière la porte. Quelqu’un qui attendait son tour.</p>
+        <p>Il n’avait pas le temps pour deux. Le gamin d’abord. Le bypass d’abord.</p>
+        <p class="dlg">— Écoute-moi, dit Drev. Tu vas expirer lentement. Tout l’air. Jusqu’au bout. Quand je dis stop, tu bloques. Tu respires plus. Trente secondes. Je fais le reste.</p>
+        <p class="dlg">— Et si ça marche pas ?</p>
+        <p class="dlg">— Alors le fil reste et la pression continue de monter. Et dans l’heure t’es le troisième type de Syl qui revient pas.</p>
+        <p>Le gamin le regarda. Pas longtemps. Il inspira. Souffla. Longtemps. L’air sortit en sifflement décroissant. Sur la lentille, Drev voyait la pression descendre millimètre de mercure par millimètre.</p>
+        <p class="dlg">— Stop.</p>
+        <p>Le gamin bloqua. Bouche fermée. Thorax immobile.</p>
+        <p><em>Trente secondes.</em></p>
+        <p>Drev enfonça l’extracteur. Aiguille capillaire, sous la peau, entre le cartilage cricoïde et le premier anneau trachéal. Froid de l’acier dans le tissu.</p>
+        <p>Le gamin serra les dents. Le cartilage repoussait la pointe. Drev ajusta l’angle. Un demi-millimètre. L’aiguille glissa.</p>
+        <p><em>Quinze secondes.</em></p>
+        <p class="dlg">— Tiens bon, dit Drev.</p>
+        <p>Le gamin ne répondit pas. Il ne pouvait pas.</p>
+        <p>Il ne voyait rien. Il sentait. Le bout de l’aiguille qui raclait la paroi interne de la vanne. Lisse, lisse, lisse. Accroc. Un point dur. Le fil de cuivre.</p>
+        <p>Ses doigts se décalèrent d’une demi-seconde. Le Lag. Même à 0,5, même au repos, le geste arrivait après l’intention. Il corrigea. Pinça le fil à travers l’aiguille.</p>
+        <p><em>Dix secondes.</em></p>
+        <p>Le gamin avait les yeux fermés. Les veines de son cou saillaient. Ses mains agrippaient le bord de l’établi, jointures blanches.</p>
+        <p>Drev tira.</p>
+        <p>Le fil résista. La soudure tenait. Il força, et le cuivre céda d’un coup. Deux centimètres. Une soudure grossière à chaque bout. La vanne claqua. Un bruit sourd, mouillé, à l’intérieur de la gorge du gamin. Le clapet s’était refermé.</p>
+        <p>Le gamin inspira. Un râle. Puis un souffle. Rauque, irrité, mais régulier.</p>
+        <p><em>Pression vanne droite : 1,1 atm. Descendante.</em></p>
+        <p class="dlg">— Bouge pas. Vingt minutes. Le temps que la pression se stabilise.</p>
+        <p>Le gamin hocha la tête, et ses mains tremblaient encore mais d’un tremblement différent, plus lent, plus large, celui qui vient quand le corps comprend qu’il a eu le temps de mourir trois fois pendant que quelqu’un d’autre travaillait à sa place. Plus du Lag.</p>
+        <p>Drev retira ses gants. Regarda la porte. Le sifflement du masque crevé avait disparu. L’autre patient était parti.</p>
+        <p>Un de moins dans le couloir. Soixante-dix, quatre-vingts crédits, s’il avait été solvable.</p>
+        <p>Il regarda les filtres que Syl avait laissés. Deux en état correct, revendables pour soixante-quinze ou quatre-vingts crédits. Plus le paiement du gamin.</p>
+        <p class="dlg">— Combien t’as ?</p>
+        <p>Le gamin fouilla sa combinaison. Posa sur l’établi une clé de transfert et deux connecteurs C4, neufs, sous emballage, la taille d’un ongle. Du matériel de maintenance. Volé ou détourné, probablement.</p>
+        <p>La clé contenait 80 CR. Les connecteurs valaient trente-cinq chacun au Marché Gris. Total : 150 CR.</p>
+        <p class="hud"><em>Solde : 222 CR. Dette : 330.</em></p>
+        <p>Moins les 230 de la semaine. L’O2, rien d’autre.</p>
+        <p>Drev ouvrit le tiroir. Dernier joint semi-médical, il le prit pour lui. Il retira son propre masque. L’air froid du Niveau 50 lui mordit le visage. Quarante secondes avant que le froid devienne un problème.</p>
+        <p>Il remplaça le joint en vingt. Le silicone claqua dans la rainure. Propre. Étanche.</p>
+        <p><em>Masque : 12% fuite. Amélioré.</em></p>
+        <p>Le gamin se leva. Ses jambes tenaient. Sa gorge était rouge, irritation du cartilage. Mais le sifflement interne avait cessé.</p>
+        <p class="dlg">— C’est con, dit-il.</p>
+        <p class="dlg">— C’est trente crédits.</p>
+        <p>Le gamin se dirigea vers la porte. S’arrêta. Se retourna.</p>
+        <p class="dlg">— La vanne, murmura-t-il. C’est pas un bug. C’est fait pour.</p>
+        <p>Drev ne releva pas. Il rangeait l’extracteur.</p>
+        <p>La porte se referma. Le froid du couloir resta.</p>
+        <p class="hud"><em>Solde : 72 CR. Dette : 410. Lag : 0,5s.</em></p>
+        <p>Le fil de cuivre était posé sur l’établi. Deux centimètres. Trente crédits. Les turbines ronronnaient à 440 Hz derrière la cloison.</p>
+</article>
+
+<!-- FIN D’ÉPISODE -->
+<section class="chapter-end">
+    <div class="end-rule"><span>Fin de l’épisode 3</span></div>
+    <div class="registre-card">
+        <div class="registre-title">📋 Registre du Recycleur — Entrée #3</div>
+            <p><em>Composants récupérés : 1 fil de cuivre (bypass illégal, 2 cm, conservé). 2 connecteurs C4 neufs (revendables, ~70 CR).</em></p>
+            <p><em>Paiement : 80 CR + 2 connecteurs C4. Total estimé : 150 CR.</em></p>
+            <p><em>Dépenses : 230 CR (O2 semaine). Composant utilisé : 1 joint silicone semi-médical (réserve, usage personnel).</em></p>
+            <p><em>Note : Coup de bélier pneumatique par bypass vanne. Troisième cas ce mois. Schéma au Gris pour 30 CR. Taux de survie : indéterminé. Échantillon trop petit. Ou trop silencieux.</em></p>
+            <p><em>Anomalie : temp. C4 +0,4°C au-dessus profil constructeur. Variance de lot probable.</em></p>
+    </div>
+    <div class="ep-banner">
+        <p><em>Partitions Fantômes se déroule huit ans avant <strong>Code d’Inertie</strong> (roman, avril 2027).</em></p>
+        <p><em>Vous lisez cet épisode sept jours avant sa sortie publique.</em></p>
+        <p><em>Prochain épisode le 13 septembre, en avance comme toujours.</em></p>
+    </div>
+
+    <p class="ep-copyright">&copy; 2026 C.E. Rochard</p>
+
+    <nav class="ep-nav" aria-label="Navigation entre épisodes">
+        <a href="episode-02.html" class="end-btn secondary"><span>&#8592;</span> Épisode 2</a>
+        <a href="transmissions.html" class="end-btn secondary">Sommaire</a>
+        <a href="episode-04.html" class="end-btn">Épisode 4 <span>&#8594;</span></a>
+    </nav>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Olymos — C.E.Rochard</div>
+        <nav class="footer-nav" aria-label="Liens de pied de page">
+            <a href="index.html">Univers</a>
+            <a href="carte-secteurs.html">Carte</a>
+            <a href="chronologie.html">Chronologie</a>
+            <a href="profil-citoyen.html">Profil Citoyen</a>
+            <a href="roman.html">Le Roman</a>
+            <a href="spin-off.html">Le Spin-off</a>
+            <a href="dossier-omnis.html">Archives Classifiées</a>
+            <a href="a-propos.html">L’auteur</a>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="politique-confidentialite.html">Confidentialité</a>
+        </nav>
+        <p class="footer-copy">Copyright &copy; 2026 &mdash; C.E. Rochard. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème clair/sombre" aria-pressed="false" title="Basculer le thème">
+    <span class="icon-sun">&#9728;</span>
+    <span class="icon-moon">&#9790;</span>
+</button>
+
+<script>
+/* ── Accréditation C3 : activation par lien, puis contrôle ── */
+(function() {
+    var ok = false;
+    try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('acces') === 'c3') {
+            localStorage.setItem('olymos-acces', 'c3');
+            params.delete('acces');
+            var q = params.toString();
+            window.history.replaceState({}, '',
+                window.location.pathname + (q ? '?' + q : '') + window.location.hash);
+        }
+        ok = (localStorage.getItem('olymos-acces') === 'c3');
+    } catch (e) { ok = false; }
+
+    if (!ok) {
+        var overlay = document.getElementById('gateOverlay');
+        if (overlay) {
+            overlay.classList.add('active');
+            document.body.classList.add('locked');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+})();
+</script>
+
+<script>
+/* ── Thème clair / sombre ── */
+(function() {
+    var toggle = document.getElementById('themeToggle');
+    var saved = null;
+    try { saved = localStorage.getItem('dossier-theme'); } catch (e) {}
+    if (saved === 'light') {
+        document.documentElement.classList.add('light');
+        toggle.setAttribute('aria-pressed', 'true');
+    }
+    toggle.addEventListener('click', function() {
+        var isLight = document.documentElement.classList.toggle('light');
+        toggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        try { localStorage.setItem('dossier-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+    });
+})();
+</script>
+
+<script>
+/* ── Progression de lecture ── */
+(function() {
+    var bar = document.getElementById('progressBar');
+    var article = document.getElementById('chapterBody');
+    if (!bar || !article) return;
+
+    function update() {
+        var start = article.offsetTop;
+        var span = article.offsetHeight - window.innerHeight + 200;
+        var pos = window.scrollY - start + 200;
+        var pct = span > 0 ? (pos / span) * 100 : 0;
+        bar.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+})();
+</script>
+
+<script>
+/* ── Menu hamburger mobile ── */
+(function() {
+    var btn = document.getElementById('navHamburger');
+    var overlay = document.getElementById('navMobileOverlay');
+    var closeBtn = document.getElementById('navMobileClose');
+    if (!btn || !overlay) return;
+    function openMenu() {
+        btn.classList.add('open'); overlay.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+        btn.classList.remove('open'); overlay.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+    btn.addEventListener('click', function() {
+        if (overlay.classList.contains('open')) closeMenu(); else openMenu();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    overlay.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', closeMenu);
+    });
+})();
+</script>
+
+</body>
+</html>

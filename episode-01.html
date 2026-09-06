@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Épisode 1 — L’Ouvrière au Masque Usé | Partitions Fantômes · C.E. Rochard</title>
+    <meta name="description" content="Épisode 1 du feuilleton Partitions Fantômes — L’Ouvrière au Masque Usé. Univers Olymos, huit ans avant Code d’Inertie.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --bg-deep:        #06060d;
+            --bg-dark:        #09091a;
+            --bg-card:        #0e0e1f;
+            --bg-card-border: #141430;
+            --cyan:           #00d4ff;
+            --cyan-dim:       rgba(0, 212, 255, 0.20);
+            --cyan-glow:      rgba(0, 212, 255, 0.07);
+            --violet:         #7c3aed;
+            --violet-dim:     rgba(124, 58, 237, 0.25);
+            --orange:         #ff6b35;
+            --orange-dim:     rgba(255, 107, 53, 0.20);
+            --red:            #ff3b5c;
+            --text-primary:   #e8e8f2;
+            --text-secondary: #8a8aaa;
+            --text-read:      #bcbcd2;
+            --text-muted:     #44445a;
+            --text-dim:       #2a2a42;
+            --border:         rgba(255,255,255,0.07);
+            --border-cyan:    rgba(0, 212, 255, 0.25);
+            --border-orange:  rgba(255, 107, 53, 0.25);
+            --font-title:     'Orbitron', monospace;
+            --font-body:      'Inter', sans-serif;
+        }
+        html.light {
+            --bg-deep: #d8d8e2; --bg-dark: #d0d0dc; --bg-card: #dcdce8;
+            --bg-card-border: #b8b8cc;
+            --cyan: #007a9e; --cyan-dim: rgba(0,122,158,0.15); --cyan-glow: rgba(0,122,158,0.07);
+            --violet: #5b21b6; --violet-dim: rgba(91,33,182,0.15);
+            --orange: #b84500; --orange-dim: rgba(184,69,0,0.12);
+            --red: #c0213c;
+            --text-primary: #12122a; --text-secondary: #38385a;
+            --text-read: #24243f;
+            --text-muted: #70709a; --text-dim: #9898b8;
+            --border: rgba(0,0,0,0.10); --border-cyan: rgba(0,122,158,0.28);
+            --border-orange: rgba(184,69,0,0.28);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg-deep); color: var(--text-primary);
+            font-family: var(--font-body); line-height: 1.75; overflow-x: hidden;
+        }
+
+        /* ── BARRE DE PROGRESSION DE LECTURE ── */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px;
+            background: var(--cyan); z-index: 1001; width: 0%;
+            transition: width 0.1s linear; pointer-events: none;
+            box-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem; background: rgba(6,6,13,0.94);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+        html.light .navbar { background: rgba(208,208,220,0.92); }
+        .nav-brand { font-family: var(--font-title); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 1.8rem; position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+        .nav-link { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .nav-link:hover, .nav-link.active { color: var(--cyan); }
+        .nav-classified { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.38rem 0.85rem; border-radius: 3px; text-decoration: none; white-space: nowrap; transition: all 0.2s ease; }
+        .nav-classified:hover { background: var(--orange-dim); }
+        .nav-status { display: flex; align-items: center; gap: 0.55rem; font-family: var(--font-title); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+        .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.35; transform:scale(0.75); } }
+
+        .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 6px; }
+        .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); transition: transform 0.25s ease, opacity 0.25s ease; }
+        .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+        .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .nav-mobile-overlay {
+            display: none; position: fixed; inset: 0; z-index: 999;
+            background: var(--bg-deep); flex-direction: column;
+            align-items: center; justify-content: center; gap: 1.6rem;
+            opacity: 0; transform: translateY(-12px);
+            transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+        .nav-mobile-overlay.open { display: flex; opacity: 1; transform: translateY(0); }
+        .nav-mobile-close { position: absolute; top: 1.4rem; right: 1.6rem; background: transparent; border: none; color: var(--cyan); font-size: 1.4rem; cursor: pointer; }
+        .nav-mobile-links { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+        .nav-mobile-link { font-family: var(--font-title); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; }
+        .nav-mobile-link.active, .nav-mobile-link:hover { color: var(--cyan); }
+        .nav-mobile-classified { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.6rem 1.2rem; border-radius: 3px; text-decoration: none; }
+
+        /* ── EN-TÊTE DU CHAPITRE ── */
+        .chapter-head {
+            max-width: 720px; margin: 0 auto;
+            padding: 8rem 2rem 0;
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: var(--font-title); font-size: 0.58rem;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--text-muted); text-decoration: none;
+            transition: color 0.2s ease; margin-bottom: 2.5rem;
+        }
+        .back-link:hover { color: var(--cyan); }
+        .chapter-eyebrow {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 1.2rem;
+        }
+        .chapter-num {
+            font-family: var(--font-title); font-size: 0.62rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.7rem;
+        }
+        .chapter-title {
+            font-family: var(--font-title); font-weight: 900;
+            font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+            line-height: 1.2; letter-spacing: 0.02em;
+            text-transform: uppercase; color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        /* Fiche technique — reprend le vocabulaire des dossiers Omnis */
+        .chapter-meta {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border); border-radius: 4px;
+            overflow: hidden; margin-bottom: 3.5rem;
+        }
+        .meta-cell { background: var(--bg-card); padding: 0.9rem 1rem; }
+        .meta-label {
+            font-family: var(--font-title); font-size: 0.46rem;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.35rem;
+        }
+        .meta-value {
+            font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; color: var(--cyan); letter-spacing: 0.04em;
+        }
+
+        /* ── CORPS DU TEXTE ── */
+        .chapter-body {
+            max-width: 660px; margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        .chapter-body p {
+            font-size: 1.06rem; line-height: 1.9;
+            color: var(--text-read); margin-bottom: 1.5rem;
+        }
+        .chapter-body p em { color: var(--text-primary); font-style: italic; }
+
+        /* Lettrine */
+        .chapter-body p.open { margin-bottom: 1.5rem; }
+        .chapter-body .cap {
+            float: left; font-family: var(--font-title); font-weight: 700;
+            font-size: 2.7rem; line-height: 0.9; color: var(--cyan);
+            padding: 0.35rem 0.65rem 0 0;
+        }
+
+        /* Répliques : léger retrait, texte plus clair */
+        .chapter-body p.dlg {
+            color: var(--text-primary);
+            padding-left: 1.1rem;
+            border-left: 1px solid rgba(0,212,255,0.14);
+        }
+
+        /* Interjections système — issues du manuscrit, pas ajoutées */
+        .chapter-body p.sys {
+            font-family: var(--font-title);
+            font-size: 0.72rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--cyan);
+            background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.85rem 1.1rem; margin: 2.2rem 0;
+            line-height: 1.6;
+        }
+
+        /* ── FIN DE CHAPITRE ── */
+        .chapter-end {
+            max-width: 660px; margin: 0 auto 5rem;
+            padding: 0 2rem;
+        }
+        .end-rule {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .end-rule::before, .end-rule::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .end-rule span {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); white-space: nowrap;
+        }
+        .end-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan);
+            border-radius: 4px; padding: 2rem 1.8rem;
+        }
+        .end-title {
+            font-family: var(--font-title); font-size: 0.9rem;
+            font-weight: 700; color: var(--text-primary);
+            margin-bottom: 0.8rem; letter-spacing: 0.04em;
+        }
+        .end-text {
+            font-size: 0.92rem; color: var(--text-secondary);
+            line-height: 1.8; margin-bottom: 1.6rem;
+        }
+        .end-text strong { color: var(--text-primary); font-weight: 500; }
+        .end-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .end-btn {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            font-family: var(--font-title); font-size: 0.62rem;
+            font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--cyan); border: 1px solid var(--cyan);
+            border-radius: 3px; padding: 0.72rem 1.4rem;
+            text-decoration: none; transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .end-btn:hover { background: var(--cyan-dim); box-shadow: 0 0 18px rgba(0,212,255,0.2); }
+        .end-btn.secondary { color: var(--text-muted); border-color: var(--border); }
+        .end-btn.secondary:hover { color: var(--text-secondary); background: transparent; box-shadow: none; }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--bg-dark); border-top: 1px solid var(--border);
+            padding: 2.8rem 2rem;
+        }
+        .footer-inner {
+            max-width: 900px; margin: 0 auto;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 1rem; text-align: center;
+        }
+        .footer-brand { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--cyan); text-transform: uppercase; }
+        .footer-nav { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+        .footer-nav a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .footer-nav a:hover { color: var(--text-secondary); }
+        .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-title); letter-spacing: 0.08em; }
+
+        /* ── THEME TOGGLE ── */
+        .theme-toggle {
+            position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 200;
+            width: 46px; height: 46px; border: 1px solid var(--border-cyan);
+            border-radius: 50%; background: var(--bg-card); color: var(--cyan);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; transition: all 0.3s ease;
+            backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .theme-toggle:hover { transform: scale(1.1); border-color: var(--cyan); }
+        .theme-toggle .icon-sun { display: inline; } .theme-toggle .icon-moon { display: none; }
+        html.light .theme-toggle .icon-sun { display: none; } html.light .theme-toggle .icon-moon { display: inline; }
+
+        /* ── PORTAIL C3 ── */
+        .gate-overlay {
+            display: none; position: fixed; inset: 0; z-index: 2000;
+            background: var(--bg-deep); backdrop-filter: blur(10px);
+            align-items: center; justify-content: center; padding: 1.5rem;
+        }
+        .gate-overlay.active { display: flex; }
+        body.locked .chapter-body,
+        body.locked .chapter-end { filter: blur(7px); opacity: 0.25; user-select: none; }
+        .gate-box {
+            max-width: 420px; width: 100%; background: var(--bg-card);
+            border: 1px solid var(--border-orange); border-radius: 5px; overflow: hidden;
+        }
+        .gate-top {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--border);
+        }
+        .gate-top-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulse-dot 1.2s ease infinite; }
+        .gate-top-label { font-family: var(--font-title); font-size: 0.46rem; white-space: nowrap; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+        .gate-body { padding: 2rem 1.8rem; }
+        .gate-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .gate-title { font-family: var(--font-title); font-size: 0.95rem; font-weight: 700; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+        .gate-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+        .gate-text strong { color: var(--text-primary); }
+        .gate-cta {
+            display: block; font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+            text-align: center; color: var(--bg-deep); background: var(--orange);
+            padding: 0.85rem 1.2rem; border-radius: 3px; text-decoration: none;
+            margin-bottom: 1rem; transition: box-shadow 0.25s ease;
+        }
+        .gate-cta:hover { box-shadow: 0 0 24px rgba(255,107,53,0.5); }
+        .gate-code { font-family: var(--font-title); font-size: 0.48rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); text-align: center; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .nav-links, .nav-status { display: none; }
+            .nav-hamburger { display: flex; }
+        }
+        @media (max-width: 640px) {
+            .chapter-head { padding: 6.5rem 1.5rem 0; }
+            .chapter-body, .chapter-end { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .chapter-meta { grid-template-columns: 1fr; }
+            .chapter-body p { font-size: 1rem; }
+            .footer-nav { gap: 1.1rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            html { scroll-behavior: auto; }
+        }
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--cyan); outline-offset: 3px;
+        }
+    
+
+        /* ── Éléments feuilleton (Partitions Fantômes) ── */
+        .chapter-body p.hud {
+            color: var(--cyan); background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.65rem 1.1rem; font-size: 0.98rem;
+        }
+        .chapter-body p.hud em { color: var(--cyan); }
+        .poster {
+            border: 1px solid var(--border-cyan); background: var(--bg-card);
+            border-radius: 4px; padding: 1.4rem 1.5rem; margin: 2.2rem 0;
+            text-align: center;
+        }
+        .poster p {
+            font-family: var(--font-title); font-size: 0.64rem;
+            letter-spacing: 0.12em; color: var(--text-secondary);
+            line-height: 2; margin-bottom: 0.35rem;
+        }
+        .poster p:first-child { color: var(--cyan); font-size: 0.7rem; }
+        .poster p:last-child { margin-bottom: 0; }
+        .registre-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan); border-radius: 4px;
+            padding: 1.8rem; margin-bottom: 2.2rem;
+        }
+        .registre-title {
+            font-family: var(--font-title); font-size: 0.76rem; font-weight: 700;
+            color: var(--cyan); letter-spacing: 0.07em; margin-bottom: 1.1rem;
+        }
+        .registre-card p {
+            font-size: 0.92rem; color: var(--text-secondary); font-style: italic;
+            line-height: 1.8; margin-bottom: 0.55rem;
+        }
+        .registre-card p:last-child { margin-bottom: 0; }
+        .ep-banner { text-align: center; margin-bottom: 2.6rem; }
+        .ep-banner p { font-size: 0.85rem; color: var(--text-muted); font-style: italic; line-height: 1.9; }
+        .ep-banner strong { color: var(--text-secondary); font-weight: 500; }
+        .ep-copyright { text-align: center; font-family: var(--font-title);
+            font-size: 0.6rem; letter-spacing: 0.12em; color: var(--text-muted);
+            margin: 0 0 2.2rem; line-height: 1.7; }
+        .ep-nav { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: space-between; }
+        .ep-nav .spacer { flex: 1; }
+
+        /* ── Journal du Constructeur (archive C3) ── */
+        .journal {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 4px; margin-bottom: 2.2rem; overflow: hidden;
+        }
+        .journal[open] { border-color: var(--border-cyan); }
+        .journal > summary {
+            list-style: none; cursor: pointer; padding: 1.15rem 1.5rem;
+            display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap;
+        }
+        .journal > summary::-webkit-details-marker { display: none; }
+        .journal > summary:hover { background: rgba(255,255,255,0.03); }
+        .journal > summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+        .journal-label {
+            font-family: var(--font-title); font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.09em; color: var(--cyan); text-transform: uppercase;
+        }
+        .journal-hint {
+            font-size: 0.78rem; color: var(--text-muted); font-style: italic;
+        }
+        .journal-chevron {
+            margin-left: auto; color: var(--text-muted); font-size: 0.85rem;
+            transition: transform 0.2s ease;
+        }
+        .journal[open] .journal-chevron { transform: rotate(180deg); }
+        .journal-body {
+            padding: 0 1.5rem 1.6rem; border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .journal-body p {
+            font-size: 0.95rem; color: var(--text-secondary);
+            line-height: 1.85; margin: 1.2rem 0 0;
+        }
+        .journal-sign {
+            font-family: var(--font-title); font-size: 0.66rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--text-muted); margin-top: 1.5rem;
+        }
+        @media (max-width: 640px) {
+            .journal > summary { padding: 1rem 1.1rem; }
+            .journal-body { padding: 0 1.1rem 1.3rem; }
+            .journal-hint { flex-basis: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- PORTAIL D’ACCRÉDITATION -->
+<div class="gate-overlay" id="gateOverlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-box">
+        <div class="gate-top">
+            <span class="gate-top-dot"></span>
+            <span class="gate-top-label">Omnis Corp · Contrôle d’accréditation · Terminal 7-C</span>
+        </div>
+        <div class="gate-body">
+            <div class="gate-icon">🔒</div>
+            <p class="gate-title" id="gateTitle">Accréditation C3 requise</p>
+            <p class="gate-text">
+                L’Épisode 1 de <strong>Partitions Fantômes</strong> est diffusé en avant-première
+                au <strong>Réseau prioritaire</strong>. Rejoignez la transmission pour
+                obtenir votre accréditation — l’accès est immédiat.<br><br>
+                À partir du <strong>13 sept. 2026</strong>, l’épisode est aussi en lecture
+                libre sur Wattpad, Nocteller et Purrfiction.
+            </p>
+            <a href="index.html#newsletter" class="gate-cta">Demander l’accréditation C3</a>
+            <p class="gate-code">ERR_AUTH · CODE 403 · DIFFUSION RESTREINTE</p>
+        </div>
+    </div>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar" aria-label="Navigation principale">
+    <a href="index.html" class="nav-brand">C.E.Rochard</a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">Univers</a>
+        <a href="roman.html" class="nav-link">Le Roman</a>
+        <a href="spin-off.html" class="nav-link active" aria-current="page">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-classified">🔒 Archives Classifiées</a>
+    </div>
+    <div class="nav-status">
+        <span class="nav-dot"></span>
+        Diffusion C3
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="nav-mobile-overlay" id="navMobileOverlay" aria-hidden="true">
+    <button class="nav-mobile-close" id="navMobileClose" aria-label="Fermer le menu">&#x2715;</button>
+    <div class="nav-mobile-links">
+        <a href="index.html" class="nav-mobile-link">Univers</a>
+        <a href="roman.html" class="nav-mobile-link">Le Roman</a>
+        <a href="spin-off.html" class="nav-mobile-link active">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-mobile-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-mobile-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-mobile-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-mobile-classified">🔒 Archives Classifiées</a>
+    </div>
+</div>
+
+<!-- EN-TÊTE -->
+<header class="chapter-head">
+    <a href="transmissions.html" class="back-link"><span>&#8592;</span> Sommaire du feuilleton</a>
+    <div class="chapter-eyebrow">Partitions Fantômes · Avant-première Réseau C3</div>
+    <div class="chapter-num">Épisode 1</div>
+    <h1 class="chapter-title">L’Ouvrière au Masque Usé</h1>
+
+    <div class="chapter-meta">
+        <div class="meta-cell">
+            <div class="meta-label">Registre</div>
+            <div class="meta-value">Entrée #1</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Localisation</div>
+            <div class="meta-value">Niveau 50 · Atelier</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Sortie publique</div>
+            <div class="meta-value">13 sept. 2026</div>
+        </div>
+    </div>
+</header>
+
+<!-- CORPS DE L’ÉPISODE -->
+<article class="chapter-body" id="chapterBody">
+        <p class="open"><span class="cap">L</span>e corps heurta la cloison avant la voix.</p>
+        <p>Un bruit mou, un glissement. Puis le sifflement. Aigu, irrégulier. Un masque qui fuit à plus de vingt pour cent.</p>
+        <p>Drev reposa la microsoudeuse. Dix secondes. Le sifflement ne s’arrêta pas.</p>
+        <p class="hud"><em>Solde : 312 CR. Dette : 200. Lag : 0,5s.</em></p>
+        <p>Il ouvrit.</p>
+        <p>L’ouvrière s’était affaissée contre le cadre de la porte. Combinaison standard Secteur 7, tissu renforcé aux coudes, usé partout ailleurs. Son masque V0 pendait de travers. Le joint gauche était fendu sur trois centimètres, un sourire noir dans le silicone.</p>
+        <p class="dlg">— Depuis quand ? demanda Drev.</p>
+        <p>Elle leva la main. Trois doigts.</p>
+        <p class="dlg">— Trois heures ?</p>
+        <p>Elle hocha la tête. Sa respiration sifflait comme une bouilloire percée.</p>
+        <p>Trois heures d’escalade dans le Conduit #7, avec un masque à trente pour cent de fuite.</p>
+        <p class="dlg">— T’as grimpé tout le Conduit comme ça ?</p>
+        <p>Elle hocha la tête.</p>
+        <p class="dlg">— Trois heures d’effort. Boucle fermée, tu paies presque rien. La tienne fuyait d’un tiers. C’est ce tiers-là qu’Omnis t’a facturé, minute après minute.</p>
+        <p>Il l’attrapa par le bras et la tira vers l’établi.</p>
+        <p class="dlg">— Assieds-toi. Touche à rien.</p>
+        <p>L’ouvrière respirait par à-coups. Petites inspirations, courtes, rapides. Un réflexe de panique quand le corps sent qu’il n’a pas assez d’air. Drev connaissait ce bruit.</p>
+        <p>Il enfila ses gants. Décrocha le masque de son visage, d’une main, sans prévenir. Le retourna sous la lampe.</p>
+        <p>Le joint principal était mort. Silicone V0 standard, le moins cher du catalogue Omnis.</p>
+        <p class="dlg">— Il a quel âge, ce joint ?</p>
+        <p class="dlg">— Deux mois. Peut-être trois.</p>
+        <p class="dlg">— Durée de vie théorique : six mois. En conditions Secteur 7 : six semaines. Huit si tu graisses tous les trois jours, ce que tu fais pas.</p>
+        <p>L’ouvrière ne répondit pas. Omnis appelait ça de l’optimisation de cycle. Drev appelait ça un client récurrent.</p>
+        <p class="dlg">— Le joint a cédé sur le bord interne, dit-il sans la regarder. Fissure nette. Pas un arrachement. Une fatigue matériau. Tu graisses quand ?</p>
+        <p>L’ouvrière toussa. Rien de rosâtre, pas encore.</p>
+        <p class="dlg">— Quand j’ai de la graisse.</p>
+        <p class="dlg">— C’est-à-dire jamais.</p>
+        <p>Silence. Le sifflement des turbines derrière la cloison. 440 Hz. Le battement de cœur du Niveau 50.</p>
+        <p>Drev palpa le reste du joint. La partie droite tenait, molle mais intègre. Il retourna le masque.</p>
+        <p class="dlg">— La valve marche. Le filtre est encrassé, gris au lieu de blanc. Mais pas bouché.</p>
+        <p class="dlg">— Alors c’est quoi, le problème ?</p>
+        <p class="dlg">— La boucle.</p>
+        <p class="dlg">— Je sais ce qu’un masque fait.</p>
+        <p>Sa voix vibrait. Colère ou hypoxie, probablement les deux.</p>
+        <p>Drev posa le doigt sur la valve.</p>
+        <p class="dlg">— L’air que t’expires repasse dans le filtre. Revient dans tes poumons. Ferme. Tant que le joint tient.</p>
+        <p>Il appuya sur la fissure. Le silicone s’écarta d’un millimètre sous la pression.</p>
+        <p class="dlg">— Là, ça fuit avant de revenir. Chaque souffle, tu perds. Même couchée. Même au repos. Le masque tourne dans le vide. Alors tu sais ce que ça coûte.</p>
+        <p>Elle ne répondit pas.</p>
+        <p>Drev posa le masque sur l’établi. Ouvrit le tiroir du bas. Deux joints de silicone, scellés dans du plastique anti-humidité. Grade semi-médical. Du vrai silicone, récupéré sur un lot de maintenance Omnis que Harven lui avait refilé le mois dernier.</p>
+        <p>Il en avait gardé un pour son propre masque. Le sien fuyait à quinze pour cent. Pas critique. Gérable. Mais quinze pour cent, ça grignotait.</p>
+        <p>Il regarda le joint dans sa main. Puis le masque de l’ouvrière.</p>
+        <p><em>Un corps n’est qu’une machine mal conçue. Ce qui compte, c’est le rendement. Moi je ne m’occupe que de ce qui se répare.</em></p>
+        <p class="dlg">— Tu peux payer ?</p>
+        <p>L’ouvrière fouilla sa poche. Posa sur l’établi un filtre recyclé, encore emballé, et une clé de transfert. Une petite puce de stockage, rectangulaire, la taille d’une dent. Drev la brancha sur son interface.</p>
+        <p><em>Transfert entrant : 110 CR.</em> Plus le filtre, revendable à Syl pour soixante, soixante-dix.</p>
+        <p>Cent soixante-dix crédits, au mieux.</p>
+        <p>Le joint valait deux-cinquante. Son joint. Celui qu’il gardait pour lui.</p>
+        <p class="dlg">— C’est pas assez, dit Drev.</p>
+        <p>L’ouvrière ne bougea pas.</p>
+        <p class="dlg">— C’est tout ce que j’ai.</p>
+        <p class="dlg">— Alors c’est tout ce que t’auras.</p>
+        <p>Elle ne bougea pas.</p>
+        <p>Drev posa le joint sur l’établi, entre eux deux. Pas dans sa main. Pas dans la sienne. Sur le métal froid.</p>
+        <p class="dlg">— Le filtre, dit-il. Combien tu l’as payé ?</p>
+        <p class="dlg">— Quatre-vingts. Un revendeur du Bloc 14.</p>
+        <p class="dlg">— Syl me le prend à soixante-dix.</p>
+        <p class="dlg">— Alors t’es perdant.</p>
+        <p class="dlg">— Quatre-vingts crédits de déficit. Et l’air que je consomme pendant qu’on en parle, c’est 0,5 par minute.</p>
+        <p>Drev ramassa le joint. L’ouvrière n’avait pas bougé d’un centimètre. Elle respirait toujours par à-coups. Petites gorgées d’air brut, arrachées au froid. Chaque inspiration, une perte sèche. Ils le savaient tous les deux.</p>
+        <p>La question n’était pas le prix.</p>
+        <p>La question était combien de temps elle avait encore à ce rythme-là.</p>
+        <p>Il calcula. Trente minutes, peut-être quarante si elle restait immobile, si sa fréquence respiratoire descendait sous les douze cycles par minute et si le joint gauche du masque ne cédait pas davantage sous la dilatation thermique du silicone fatigué.</p>
+        <p>Pas par compassion. Drev n’avait pas de ligne budget pour ça. Un cadavre attire les Nettoyeurs. Les Nettoyeurs posent des questions. Et les questions coûtent plus cher qu’un joint semi-médical grade B.</p>
+        <p>Il prit la pince à découper.</p>
+        <p>L’ouvrière ne parlait pas. Drev non plus. Pendant trente secondes.</p>
+        <p class="dlg">— Ça va tenir combien de temps ? dit-elle.</p>
+        <p class="dlg">— Six semaines. Huit si tu graisses.</p>
+        <p>Il retira le joint mort en deux tractions. Nettoya la rainure avec un chiffon imbibé d’alcool synthétique.</p>
+        <p>Le métal en dessous était piqué.</p>
+        <p class="dlg">— C’est quoi ? dit l’ouvrière.</p>
+        <p class="dlg">— Corrosion saline. La sueur s’infiltre sous le joint, ronge le métal. Je gratte.</p>
+        <p>Il gratta au scalpel. Pas vite. Pas lentement. À la vitesse où le métal lâche sans craquer.</p>
+        <p class="dlg">— Bouge pas, dit-il.</p>
+        <p>L’ouvrière s’immobilisa. Elle respirait encore par à-coups.</p>
+        <p>Le nouveau joint glissa dans la rainure. Ajustement serré, le silicone semi-médical opposant une résistance régulière que Drev connaissait par cœur à force de poser des joints sur des masques V0 dont les rainures n’avaient jamais les mêmes tolérances d’un lot à l’autre. Il pressa avec le pouce, secteur par secteur, en écoutant. Pas avec les yeux. Avec la pression dans le doigt.</p>
+        <p>Le silicone claqua contre le métal.</p>
+        <p class="dlg">— Ça fuit encore ? dit l’ouvrière.</p>
+        <p class="dlg">— Non. Mets-le.</p>
+        <p>L’ouvrière prit le masque. Le positionna. Inspira.</p>
+        <p>Le sifflement avait disparu.</p>
+        <p>Elle inspira encore. Plus profondément. Drev vit ses épaules descendre d’un centimètre. Tout le corps qui lâche quand l’air revient.</p>
+        <p class="dlg">— La boucle est fermée, dit Drev. Tant que le joint tient, ta consommation au repos tombe à quasi zéro. En mouvement, le filtre fait le boulot. Tu perds rien.</p>
+        <p>Il ramassa le filtre recyclé et la clé de transfert sur l’établi.</p>
+        <p class="dlg">— Graisse le joint tous les trois jours. Silicone ou vaseline industrielle. Pas de graisse moteur. Ça bouffe le matériau.</p>
+        <p class="dlg">— Et si j’ai pas de silicone ?</p>
+        <p class="dlg">— Alors tu reviens dans six semaines. Et la prochaine fois, c’est plus cher.</p>
+        <p>L’ouvrière se leva. Ses jambes tremblaient. Trois heures de Conduit #7 à trente pour cent de fuite, ça laisse des traces.</p>
+        <p class="dlg">— Merci, dit-elle.</p>
+        <p>Drev ne répondit pas. Il rangeait déjà la pince.</p>
+        <p>Dans le couloir, l’ouvrière passa devant une affiche collée sur le mur en béton. Lettres blanches sur fond bleu Omnis :</p>
+        <aside class="poster" aria-label="Affiche Omnis">
+            <p>PROGRAMME DE DÉPISTAGE DU SYNDROME ALVÉOLAIRE DE LA RUCHE</p>
+            <p>Priorité Secteur 7 · Phase 1</p>
+            <p>Vaccination gratuite · Clinique mobile niveau 48</p>
+            <p>Coordonné par le Dr M. Denk · Service Santé Pulmonaire Omnis Corp.</p>
+        </aside>
+        <p>Elle s’arrêta une seconde. Souleva le masque. Cracha par terre.</p>
+        <p class="dlg">— La Peste de la Ruche, dit-elle à personne. C’est la Peste de la Ruche, pas leur SAR à la con.</p>
+        <p>Drev l’entendit depuis l’atelier. Il ne releva pas. Quelque part dans le couloir, quelqu’un toussa. Toux grasse, profonde, avec un raclement humide à la fin.</p>
+        <p>Mucus rosâtre, micro-hémorragies alvéolaires. Le smog qui ronge les poumons de l’intérieur.</p>
+        <p>L’affiche disait SAR. L’ouvrière disait Peste de la Ruche. Le bruit dans le couloir, lui, avait un nom que tout le monde au Niveau 50 connaissait sans l’avoir lu nulle part : La Chantilly.</p>
+        <p class="hud"><em>Solde : 132 CR. Dette : 270. Lag : 0,5s.</em></p>
+        <p>Drev regarda le tiroir. Un joint restant.</p>
+        <p>Son masque sifflait à quinze pour cent. Pas mortel. Pas cette semaine. Mais le quinze deviendrait vingt, puis vingt-cinq, et un matin la boucle se percerait sans prévenir.</p>
+        <p>Il referma le tiroir.</p>
+        <p>Le métal de l’établi vibrait sous ses doigts. 440 Hz. Les turbines, toujours les turbines.</p>
+        <p>Quelqu’un frappa à la porte.</p>
+        <p>Drev ne bougea pas. Attendit. Trois nouveaux coups, espacés. Le rythme des gens qui ne savent pas s’ils ont le droit de frapper.</p>
+        <p>Un insolvable. Il le savait au rythme.</p>
+        <p class="dlg">— T’as de quoi payer ? lança Drev à travers la cloison.</p>
+        <p>Un raclement. Puis une voix, étouffée par le masque.</p>
+        <p class="dlg">— J’ai… j’ai un filtre.</p>
+        <p class="dlg">— Quel grade ?</p>
+        <p>Silence. Les pas s’éloignèrent. Puis la toux, grasse, rosâtre dans le son, lourde de poumons qui se noient au ralenti. La Chantilly.</p>
+        <p>Drev écouta le rythme. Pas par curiosité. Par calcul.</p>
+        <p>Une quinte toutes les onze secondes. Chacune durait deux secondes. Rapport effort-douleur : élevé. Stade deux, peut-être trois si la fréquence avait augmenté dans la semaine.</p>
+        <p><em>Autonomie estimée : dix-huit à vingt-deux jours. Au repos. Moins s’il travaillait.</em></p>
+        <p>La toux s’éloigna. Pas à pas. De plus en plus faible.</p>
+        <p>Celui-là ne reviendrait pas. Ni dans vingt-deux jours, ni dans dix.</p>
+        <p>Drev reprit la microsoudeuse. Un connecteur C4 à recalibrer pour demain. Huit minutes de travail. Quatre crédits de composant.</p>
+        <p>Quelqu’un frappait déjà à la porte suivante.</p>
+</article>
+
+<!-- FIN D’ÉPISODE -->
+<section class="chapter-end">
+    <div class="end-rule"><span>Fin de l’épisode 1</span></div>
+    <div class="registre-card">
+        <div class="registre-title">📋 Registre du Recycleur — Entrée #1</div>
+            <p><em>Composants récupérés : 1 joint silicone V0 usagé (irrécupérable, jeté). 1 filtre recyclé (revendable, ~70 CR via Syl).</em></p>
+            <p><em>Paiement : 110 CR liquide + 1 filtre recyclé. Total estimé : ~180 CR.</em></p>
+            <p><em>Dépense : 1 joint silicone semi-médical (valeur : 250 CR). Perte nette : ~70 CR.</em></p>
+            <p><em>Sorties liquides de la semaine : 290 CR. O2 hebdomadaire 220. Solvant, abrasif, consommables 70.</em></p>
+            <p><em>Frais hebdomadaires Omnis : +70 CR, portés en dette.</em></p>
+            <p><em>Note : Masque personnel toujours à 15% de fuite. Un joint en réserve. Affiche SAR Secteur 7, clinique mobile niveau 48. Première de la saison. Ils accélèrent.</em></p>
+    </div>
+    <div class="ep-banner">
+        <p><em>Partitions Fantômes se déroule huit ans avant <strong>Code d’Inertie</strong> (roman, avril 2027).</em></p>
+        <p><em>Vous lisez cet épisode sept jours avant sa sortie publique.</em></p>
+        <p><em>Prochain épisode le 6 septembre, en avance comme toujours.</em></p>
+    </div>
+    <details class="journal" id="journal">
+        <summary>
+            <span class="journal-label">Journal du Constructeur</span>
+            <span class="journal-hint">coulisses de l&rsquo;&eacute;pisode 1 &mdash; &agrave; lire apr&egrave;s</span>
+            <span class="journal-chevron" aria-hidden="true">&#9660;</span>
+        </summary>
+        <div class="journal-body">
+            <p>Le feuilleton s’ouvre sur un joint de silicone fendu. Pas de conspiration, pas de grande machinerie d’intrigue : un joint à deux cent cinquante crédits, et une ouvrière qui n’en a que cent quatre-vingts.</p>
+            <p>C’était la décision la plus importante de la saison, et je l’ai prise avant d’écrire la première ligne : le lecteur doit comprendre ce que coûte une respiration avant de savoir qui respire. Dans La Ruche, l’air est facturé à la minute par la puce C4. Une phrase de lore, ça s’oublie en trois pages. Une fuite de trente pour cent qu’Omnis facture minute après minute pendant trois heures d’escalade dans le Conduit #7, ça s’imprime. Le compteur tourne pendant que vous lisez.</p>
+            <p>D’où la règle que l’épisode installe : la boucle fermée. Un masque V0 en bon état recycle l’air expiré. Au repos, consommation quasi nulle. La fuite est la seule chose qui coûte. Omnis ne vend pas de l’air, au fond. Elle vend vos défauts d’étanchéité.</p>
+            <p>Ensuite, le Registre. Chaque épisode se ferme sur une entrée comptable, et j’ai passé plus de temps sur ces quelques lignes que sur certaines scènes entières. Elles doivent tenir trois fonctions à la fois : boucler l’intrigue de la semaine, tenir les comptes exacts de Drev, les vrais, ceux que je vérifie sur un tableau, et laisser dépasser un fil. Regardez la première entrée : perte nette, soixante-dix crédits. La saison commence en déficit. Drev a donné son propre joint, celui qu’il gardait pour son masque à quinze pour cent de fuite. Pas par compassion, il vous le dira lui-même : un cadavre attire les Nettoyeurs, et les questions coûtent plus cher qu’un joint.</p>
+            <p>Ce déficit-là, gardez-le en tête. Le Registre n’oublie rien.</p>
+            <p>Dernière chose. Vous croiserez une affiche dans le couloir. Trois noms pour une même toux : SAR sur l’affiche, Peste de la Ruche dans la bouche de l’ouvrière. Et un troisième, la Chantilly, que tout le Niveau 50 connaît sans l’avoir lu nulle part. Trois noms, ce n’est jamais gratuit.</p>
+            <p class="journal-sign">C.E. Rochard &middot; Archive R&eacute;seau C3</p>
+        </div>
+    </details>
+
+    <p class="ep-copyright">&copy; 2026 C.E. Rochard</p>
+
+    <nav class="ep-nav" aria-label="Navigation entre épisodes">
+        <span class="spacer"></span>
+        <a href="transmissions.html" class="end-btn secondary">Sommaire</a>
+        <a href="episode-02.html" class="end-btn">Épisode 2 <span>&#8594;</span></a>
+    </nav>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Olymos — C.E.Rochard</div>
+        <nav class="footer-nav" aria-label="Liens de pied de page">
+            <a href="index.html">Univers</a>
+            <a href="carte-secteurs.html">Carte</a>
+            <a href="chronologie.html">Chronologie</a>
+            <a href="profil-citoyen.html">Profil Citoyen</a>
+            <a href="roman.html">Le Roman</a>
+            <a href="spin-off.html">Le Spin-off</a>
+            <a href="dossier-omnis.html">Archives Classifiées</a>
+            <a href="a-propos.html">L’auteur</a>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="politique-confidentialite.html">Confidentialité</a>
+        </nav>
+        <p class="footer-copy">Copyright &copy; 2026 &mdash; C.E. Rochard. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème clair/sombre" aria-pressed="false" title="Basculer le thème">
+    <span class="icon-sun">&#9728;</span>
+    <span class="icon-moon">&#9790;</span>
+</button>
+
+<script>
+/* ── Accréditation C3 : activation par lien, puis contrôle ── */
+(function() {
+    var ok = false;
+    try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('acces') === 'c3') {
+            localStorage.setItem('olymos-acces', 'c3');
+            params.delete('acces');
+            var q = params.toString();
+            window.history.replaceState({}, '',
+                window.location.pathname + (q ? '?' + q : '') + window.location.hash);
+        }
+        ok = (localStorage.getItem('olymos-acces') === 'c3');
+    } catch (e) { ok = false; }
+
+    if (!ok) {
+        var overlay = document.getElementById('gateOverlay');
+        if (overlay) {
+            overlay.classList.add('active');
+            document.body.classList.add('locked');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+})();
+</script>
+
+<script>
+/* ── Thème clair / sombre ── */
+(function() {
+    var toggle = document.getElementById('themeToggle');
+    var saved = null;
+    try { saved = localStorage.getItem('dossier-theme'); } catch (e) {}
+    if (saved === 'light') {
+        document.documentElement.classList.add('light');
+        toggle.setAttribute('aria-pressed', 'true');
+    }
+    toggle.addEventListener('click', function() {
+        var isLight = document.documentElement.classList.toggle('light');
+        toggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        try { localStorage.setItem('dossier-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+    });
+})();
+</script>
+
+<script>
+/* ── Progression de lecture ── */
+(function() {
+    var bar = document.getElementById('progressBar');
+    var article = document.getElementById('chapterBody');
+    if (!bar || !article) return;
+
+    function update() {
+        var start = article.offsetTop;
+        var span = article.offsetHeight - window.innerHeight + 200;
+        var pos = window.scrollY - start + 200;
+        var pct = span > 0 ? (pos / span) * 100 : 0;
+        bar.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+})();
+</script>
+
+<script>
+/* ── Menu hamburger mobile ── */
+(function() {
+    var btn = document.getElementById('navHamburger');
+    var overlay = document.getElementById('navMobileOverlay');
+    var closeBtn = document.getElementById('navMobileClose');
+    if (!btn || !overlay) return;
+    function openMenu() {
+        btn.classList.add('open'); overlay.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+        btn.classList.remove('open'); overlay.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+    btn.addEventListener('click', function() {
+        if (overlay.classList.contains('open')) closeMenu(); else openMenu();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    overlay.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', closeMenu);
+    });
+})();
+</script>
+
+</body>
+</html>
