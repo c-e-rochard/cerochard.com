@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Épisode 4 — L’Enfant Implanté | Partitions Fantômes · C.E. Rochard</title>
+    <meta name="description" content="Épisode 4 du feuilleton Partitions Fantômes — L’Enfant Implanté. Univers Olymos, huit ans avant Code d’Inertie.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --bg-deep:        #06060d;
+            --bg-dark:        #09091a;
+            --bg-card:        #0e0e1f;
+            --bg-card-border: #141430;
+            --cyan:           #00d4ff;
+            --cyan-dim:       rgba(0, 212, 255, 0.20);
+            --cyan-glow:      rgba(0, 212, 255, 0.07);
+            --violet:         #7c3aed;
+            --violet-dim:     rgba(124, 58, 237, 0.25);
+            --orange:         #ff6b35;
+            --orange-dim:     rgba(255, 107, 53, 0.20);
+            --red:            #ff3b5c;
+            --text-primary:   #e8e8f2;
+            --text-secondary: #8a8aaa;
+            --text-read:      #bcbcd2;
+            --text-muted:     #44445a;
+            --text-dim:       #2a2a42;
+            --border:         rgba(255,255,255,0.07);
+            --border-cyan:    rgba(0, 212, 255, 0.25);
+            --border-orange:  rgba(255, 107, 53, 0.25);
+            --font-title:     'Orbitron', monospace;
+            --font-body:      'Inter', sans-serif;
+        }
+        html.light {
+            --bg-deep: #d8d8e2; --bg-dark: #d0d0dc; --bg-card: #dcdce8;
+            --bg-card-border: #b8b8cc;
+            --cyan: #007a9e; --cyan-dim: rgba(0,122,158,0.15); --cyan-glow: rgba(0,122,158,0.07);
+            --violet: #5b21b6; --violet-dim: rgba(91,33,182,0.15);
+            --orange: #b84500; --orange-dim: rgba(184,69,0,0.12);
+            --red: #c0213c;
+            --text-primary: #12122a; --text-secondary: #38385a;
+            --text-read: #24243f;
+            --text-muted: #70709a; --text-dim: #9898b8;
+            --border: rgba(0,0,0,0.10); --border-cyan: rgba(0,122,158,0.28);
+            --border-orange: rgba(184,69,0,0.28);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg-deep); color: var(--text-primary);
+            font-family: var(--font-body); line-height: 1.75; overflow-x: hidden;
+        }
+
+        /* ── BARRE DE PROGRESSION DE LECTURE ── */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px;
+            background: var(--cyan); z-index: 1001; width: 0%;
+            transition: width 0.1s linear; pointer-events: none;
+            box-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem; background: rgba(6,6,13,0.94);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+        html.light .navbar { background: rgba(208,208,220,0.92); }
+        .nav-brand { font-family: var(--font-title); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 1.8rem; position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+        .nav-link { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .nav-link:hover, .nav-link.active { color: var(--cyan); }
+        .nav-classified { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.38rem 0.85rem; border-radius: 3px; text-decoration: none; white-space: nowrap; transition: all 0.2s ease; }
+        .nav-classified:hover { background: var(--orange-dim); }
+        .nav-status { display: flex; align-items: center; gap: 0.55rem; font-family: var(--font-title); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+        .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.35; transform:scale(0.75); } }
+
+        .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 6px; }
+        .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); transition: transform 0.25s ease, opacity 0.25s ease; }
+        .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+        .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .nav-mobile-overlay {
+            display: none; position: fixed; inset: 0; z-index: 999;
+            background: var(--bg-deep); flex-direction: column;
+            align-items: center; justify-content: center; gap: 1.6rem;
+            opacity: 0; transform: translateY(-12px);
+            transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+        .nav-mobile-overlay.open { display: flex; opacity: 1; transform: translateY(0); }
+        .nav-mobile-close { position: absolute; top: 1.4rem; right: 1.6rem; background: transparent; border: none; color: var(--cyan); font-size: 1.4rem; cursor: pointer; }
+        .nav-mobile-links { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+        .nav-mobile-link { font-family: var(--font-title); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; }
+        .nav-mobile-link.active, .nav-mobile-link:hover { color: var(--cyan); }
+        .nav-mobile-classified { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.6rem 1.2rem; border-radius: 3px; text-decoration: none; }
+
+        /* ── EN-TÊTE DU CHAPITRE ── */
+        .chapter-head {
+            max-width: 720px; margin: 0 auto;
+            padding: 8rem 2rem 0;
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: var(--font-title); font-size: 0.58rem;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--text-muted); text-decoration: none;
+            transition: color 0.2s ease; margin-bottom: 2.5rem;
+        }
+        .back-link:hover { color: var(--cyan); }
+        .chapter-eyebrow {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 1.2rem;
+        }
+        .chapter-num {
+            font-family: var(--font-title); font-size: 0.62rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.7rem;
+        }
+        .chapter-title {
+            font-family: var(--font-title); font-weight: 900;
+            font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+            line-height: 1.2; letter-spacing: 0.02em;
+            text-transform: uppercase; color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        /* Fiche technique — reprend le vocabulaire des dossiers Omnis */
+        .chapter-meta {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border); border-radius: 4px;
+            overflow: hidden; margin-bottom: 3.5rem;
+        }
+        .meta-cell { background: var(--bg-card); padding: 0.9rem 1rem; }
+        .meta-label {
+            font-family: var(--font-title); font-size: 0.46rem;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.35rem;
+        }
+        .meta-value {
+            font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; color: var(--cyan); letter-spacing: 0.04em;
+        }
+
+        /* ── CORPS DU TEXTE ── */
+        .chapter-body {
+            max-width: 660px; margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        .chapter-body p {
+            font-size: 1.06rem; line-height: 1.9;
+            color: var(--text-read); margin-bottom: 1.5rem;
+        }
+        .chapter-body p em { color: var(--text-primary); font-style: italic; }
+
+        /* Lettrine */
+        .chapter-body p.open { margin-bottom: 1.5rem; }
+        .chapter-body .cap {
+            float: left; font-family: var(--font-title); font-weight: 700;
+            font-size: 2.7rem; line-height: 0.9; color: var(--cyan);
+            padding: 0.35rem 0.65rem 0 0;
+        }
+
+        /* Répliques : léger retrait, texte plus clair */
+        .chapter-body p.dlg {
+            color: var(--text-primary);
+            padding-left: 1.1rem;
+            border-left: 1px solid rgba(0,212,255,0.14);
+        }
+
+        /* Interjections système — issues du manuscrit, pas ajoutées */
+        .chapter-body p.sys {
+            font-family: var(--font-title);
+            font-size: 0.72rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--cyan);
+            background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.85rem 1.1rem; margin: 2.2rem 0;
+            line-height: 1.6;
+        }
+
+        /* ── FIN DE CHAPITRE ── */
+        .chapter-end {
+            max-width: 660px; margin: 0 auto 5rem;
+            padding: 0 2rem;
+        }
+        .end-rule {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .end-rule::before, .end-rule::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .end-rule span {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); white-space: nowrap;
+        }
+        .end-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan);
+            border-radius: 4px; padding: 2rem 1.8rem;
+        }
+        .end-title {
+            font-family: var(--font-title); font-size: 0.9rem;
+            font-weight: 700; color: var(--text-primary);
+            margin-bottom: 0.8rem; letter-spacing: 0.04em;
+        }
+        .end-text {
+            font-size: 0.92rem; color: var(--text-secondary);
+            line-height: 1.8; margin-bottom: 1.6rem;
+        }
+        .end-text strong { color: var(--text-primary); font-weight: 500; }
+        .end-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .end-btn {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            font-family: var(--font-title); font-size: 0.62rem;
+            font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--cyan); border: 1px solid var(--cyan);
+            border-radius: 3px; padding: 0.72rem 1.4rem;
+            text-decoration: none; transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .end-btn:hover { background: var(--cyan-dim); box-shadow: 0 0 18px rgba(0,212,255,0.2); }
+        .end-btn.secondary { color: var(--text-muted); border-color: var(--border); }
+        .end-btn.secondary:hover { color: var(--text-secondary); background: transparent; box-shadow: none; }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--bg-dark); border-top: 1px solid var(--border);
+            padding: 2.8rem 2rem;
+        }
+        .footer-inner {
+            max-width: 900px; margin: 0 auto;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 1rem; text-align: center;
+        }
+        .footer-brand { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--cyan); text-transform: uppercase; }
+        .footer-nav { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+        .footer-nav a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .footer-nav a:hover { color: var(--text-secondary); }
+        .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-title); letter-spacing: 0.08em; }
+
+        /* ── THEME TOGGLE ── */
+        .theme-toggle {
+            position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 200;
+            width: 46px; height: 46px; border: 1px solid var(--border-cyan);
+            border-radius: 50%; background: var(--bg-card); color: var(--cyan);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; transition: all 0.3s ease;
+            backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .theme-toggle:hover { transform: scale(1.1); border-color: var(--cyan); }
+        .theme-toggle .icon-sun { display: inline; } .theme-toggle .icon-moon { display: none; }
+        html.light .theme-toggle .icon-sun { display: none; } html.light .theme-toggle .icon-moon { display: inline; }
+
+        /* ── PORTAIL C3 ── */
+        .gate-overlay {
+            display: none; position: fixed; inset: 0; z-index: 2000;
+            background: var(--bg-deep); backdrop-filter: blur(10px);
+            align-items: center; justify-content: center; padding: 1.5rem;
+        }
+        .gate-overlay.active { display: flex; }
+        body.locked .chapter-body,
+        body.locked .chapter-end { filter: blur(7px); opacity: 0.25; user-select: none; }
+        .gate-box {
+            max-width: 420px; width: 100%; background: var(--bg-card);
+            border: 1px solid var(--border-orange); border-radius: 5px; overflow: hidden;
+        }
+        .gate-top {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--border);
+        }
+        .gate-top-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulse-dot 1.2s ease infinite; }
+        .gate-top-label { font-family: var(--font-title); font-size: 0.46rem; white-space: nowrap; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+        .gate-body { padding: 2rem 1.8rem; }
+        .gate-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .gate-title { font-family: var(--font-title); font-size: 0.95rem; font-weight: 700; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+        .gate-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+        .gate-text strong { color: var(--text-primary); }
+        .gate-cta {
+            display: block; font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+            text-align: center; color: var(--bg-deep); background: var(--orange);
+            padding: 0.85rem 1.2rem; border-radius: 3px; text-decoration: none;
+            margin-bottom: 1rem; transition: box-shadow 0.25s ease;
+        }
+        .gate-cta:hover { box-shadow: 0 0 24px rgba(255,107,53,0.5); }
+        .gate-code { font-family: var(--font-title); font-size: 0.48rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); text-align: center; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .nav-links, .nav-status { display: none; }
+            .nav-hamburger { display: flex; }
+        }
+        @media (max-width: 640px) {
+            .chapter-head { padding: 6.5rem 1.5rem 0; }
+            .chapter-body, .chapter-end { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .chapter-meta { grid-template-columns: 1fr; }
+            .chapter-body p { font-size: 1rem; }
+            .footer-nav { gap: 1.1rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            html { scroll-behavior: auto; }
+        }
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--cyan); outline-offset: 3px;
+        }
+    
+
+        /* ── Éléments feuilleton (Partitions Fantômes) ── */
+        .chapter-body p.hud {
+            color: var(--cyan); background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.65rem 1.1rem; font-size: 0.98rem;
+        }
+        .chapter-body p.hud em { color: var(--cyan); }
+        .poster {
+            border: 1px solid var(--border-cyan); background: var(--bg-card);
+            border-radius: 4px; padding: 1.4rem 1.5rem; margin: 2.2rem 0;
+            text-align: center;
+        }
+        .poster p {
+            font-family: var(--font-title); font-size: 0.64rem;
+            letter-spacing: 0.12em; color: var(--text-secondary);
+            line-height: 2; margin-bottom: 0.35rem;
+        }
+        .poster p:first-child { color: var(--cyan); font-size: 0.7rem; }
+        .poster p:last-child { margin-bottom: 0; }
+        .registre-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan); border-radius: 4px;
+            padding: 1.8rem; margin-bottom: 2.2rem;
+        }
+        .registre-title {
+            font-family: var(--font-title); font-size: 0.76rem; font-weight: 700;
+            color: var(--cyan); letter-spacing: 0.07em; margin-bottom: 1.1rem;
+        }
+        .registre-card p {
+            font-size: 0.92rem; color: var(--text-secondary); font-style: italic;
+            line-height: 1.8; margin-bottom: 0.55rem;
+        }
+        .registre-card p:last-child { margin-bottom: 0; }
+        .ep-banner { text-align: center; margin-bottom: 2.6rem; }
+        .ep-banner p { font-size: 0.85rem; color: var(--text-muted); font-style: italic; line-height: 1.9; }
+        .ep-banner strong { color: var(--text-secondary); font-weight: 500; }
+        .ep-nav { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: space-between; }
+        .ep-nav .spacer { flex: 1; }
+
+        /* ── Journal du Constructeur (archive C3) ── */
+        .journal {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 4px; margin-bottom: 2.2rem; overflow: hidden;
+        }
+        .journal[open] { border-color: var(--border-cyan); }
+        .journal > summary {
+            list-style: none; cursor: pointer; padding: 1.15rem 1.5rem;
+            display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap;
+        }
+        .journal > summary::-webkit-details-marker { display: none; }
+        .journal > summary:hover { background: rgba(255,255,255,0.03); }
+        .journal > summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+        .journal-label {
+            font-family: var(--font-title); font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.09em; color: var(--cyan); text-transform: uppercase;
+        }
+        .journal-hint {
+            font-size: 0.78rem; color: var(--text-muted); font-style: italic;
+        }
+        .journal-chevron {
+            margin-left: auto; color: var(--text-muted); font-size: 0.85rem;
+            transition: transform 0.2s ease;
+        }
+        .journal[open] .journal-chevron { transform: rotate(180deg); }
+        .journal-body {
+            padding: 0 1.5rem 1.6rem; border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .journal-body p {
+            font-size: 0.95rem; color: var(--text-secondary);
+            line-height: 1.85; margin: 1.2rem 0 0;
+        }
+        .journal-sign {
+            font-family: var(--font-title); font-size: 0.66rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--text-muted); margin-top: 1.5rem;
+        }
+        @media (max-width: 640px) {
+            .journal > summary { padding: 1rem 1.1rem; }
+            .journal-body { padding: 0 1.1rem 1.3rem; }
+            .journal-hint { flex-basis: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- PORTAIL D’ACCRÉDITATION -->
+<div class="gate-overlay" id="gateOverlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-box">
+        <div class="gate-top">
+            <span class="gate-top-dot"></span>
+            <span class="gate-top-label">Omnis Corp · Contrôle d’accréditation · Terminal 7-C</span>
+        </div>
+        <div class="gate-body">
+            <div class="gate-icon">🔒</div>
+            <p class="gate-title" id="gateTitle">Accréditation C3 requise</p>
+            <p class="gate-text">
+                L’Épisode 4 de <strong>Partitions Fantômes</strong> est diffusé en avant-première
+                au <strong>Réseau prioritaire</strong>. Rejoignez la transmission pour
+                obtenir votre accréditation — l’accès est immédiat.<br><br>
+                À partir du <strong>20 sept. 2026</strong>, l’épisode est aussi en lecture
+                libre sur Wattpad, Nocteller et Purrfiction.
+            </p>
+            <a href="index.html#newsletter" class="gate-cta">Demander l’accréditation C3</a>
+            <p class="gate-code">ERR_AUTH · CODE 403 · DIFFUSION RESTREINTE</p>
+        </div>
+    </div>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar" aria-label="Navigation principale">
+    <a href="index.html" class="nav-brand">C.E.Rochard</a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">Univers</a>
+        <a href="roman.html" class="nav-link">Le Roman</a>
+        <a href="spin-off.html" class="nav-link active" aria-current="page">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-classified">🔒 Archives Classifiées</a>
+    </div>
+    <div class="nav-status">
+        <span class="nav-dot"></span>
+        Diffusion C3
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="nav-mobile-overlay" id="navMobileOverlay" aria-hidden="true">
+    <button class="nav-mobile-close" id="navMobileClose" aria-label="Fermer le menu">&#x2715;</button>
+    <div class="nav-mobile-links">
+        <a href="index.html" class="nav-mobile-link">Univers</a>
+        <a href="roman.html" class="nav-mobile-link">Le Roman</a>
+        <a href="spin-off.html" class="nav-mobile-link active">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-mobile-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-mobile-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-mobile-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-mobile-classified">🔒 Archives Classifiées</a>
+    </div>
+</div>
+
+<!-- EN-TÊTE -->
+<header class="chapter-head">
+    <a href="transmissions.html" class="back-link"><span>&#8592;</span> Sommaire du feuilleton</a>
+    <div class="chapter-eyebrow">Partitions Fantômes · Avant-première Réseau C3</div>
+    <div class="chapter-num">Épisode 4</div>
+    <h1 class="chapter-title">L’Enfant Implanté</h1>
+
+    <div class="chapter-meta">
+        <div class="meta-cell">
+            <div class="meta-label">Registre</div>
+            <div class="meta-value">Entrée #4</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Localisation</div>
+            <div class="meta-value">Niveau 50 · Atelier</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Sortie publique</div>
+            <div class="meta-value">20 sept. 2026</div>
+        </div>
+    </div>
+</header>
+
+<!-- CORPS DE L’ÉPISODE -->
+<article class="chapter-body" id="chapterBody">
+        <p class="open"><span class="cap">L</span>a mère entra sans frapper.</p>
+        <p>Combinaison de technicienne, niveau 48 imprimé à l’épaule gauche. Shift de nuit, maintenance ventilation. Graisse noire sur le col, là où le harnais frottait. Sous la combinaison, un harnais thoracique serré par quatre sangles. Et dans le harnais, un paquet de tissu qui respirait.</p>
+        <p class="hud"><em>Solde : 72 CR. Dette : 410. Lag : 0,5s.</em></p>
+        <p class="dlg">— Ferme la porte.</p>
+        <p>Elle obéit. L’air du couloir cessa de mordre. Moins vingt-cinq dehors, moins dix-huit dans l’atelier. Les turbines et la ventilation bricolée retenaient un peu de chaleur entre les cloisons.</p>
+        <p class="dlg">— C’est pas une clinique, dit Drev.</p>
+        <p class="dlg">— Y’a pas de clinique au Niveau 50.</p>
+        <p class="dlg">— Alors c’est pas mon problème.</p>
+        <p class="dlg">— C’est ton établi. Et c’est un bébé.</p>
+        <p>La mère défit les sangles du harnais. Posa le nourrisson sur l’établi. Le tissu bougea. Un poing minuscule, rose, serré comme un nœud de câble. Trois semaines, peut-être quatre. Yeux fermés. Il ne pleurait pas.</p>
+        <p>Les nourrissons au Niveau 50 pleuraient. Le froid, le bruit des turbines, le sifflement des masques. Tout ici faisait pleurer.</p>
+        <p>Celui-là respirait sans bruit. Rythme lent, régulier, mécanique. Les vannes bridaient déjà le débit.</p>
+        <p class="dlg">— Il pleure pas, dit la mère.</p>
+        <p class="dlg">— Je vois. Pas de masque non plus. Le masque V0 n’existe qu’en taille adulte. Rien pour un nourrisson. Il respire l’air brut.</p>
+        <p class="dlg">— Depuis la vaccination. Trois jours.</p>
+        <p class="dlg">— Quelle vaccination ?</p>
+        <p class="dlg">— La clinique du niveau 48. La mobile. Ils m’ont dit que c’était gratuit. Un moniteur de santé pulmonaire. Pour protéger ses poumons.</p>
+        <p>Quelqu’un toussa dans le couloir. Grasse. Le raclement humide de la Chantilly. La Peste de la Ruche, comme disaient les V0. L’affiche au bout du couloir appelait ça le SAR. Le bruit, lui, s’en foutait du sigle.</p>
+        <p class="dlg">— Qui l’a posé ?</p>
+        <p class="dlg">— Un technicien. Omnis. Denk quelque chose. Badge gris. Gants en latex. Très poli. Très professionnel. Il a dit que le taux de réussite était de quatre-vingt-seize pour cent.</p>
+        <p class="dlg">— Et les quatre pour cent restants ?</p>
+        <p>La mère ne répondit pas.</p>
+        <p class="dlg">— Qu’est-ce qu’il a fait exactement ? dit Drev.</p>
+        <p class="dlg">— Il a retourné le bébé sur le ventre. Nettoyé la nuque avec un tampon bleu. Une injection à la base du cou. Mon bébé n’a pas pleuré.</p>
+        <p class="dlg">— Il a pas pleuré pendant l’injection ?</p>
+        <p class="dlg">— Non. Le technicien a dit que c’était normal. Bon signe.</p>
+        <p class="dlg">— Et depuis ?</p>
+        <p class="dlg">— Il pleure plus du tout. Il dort trop. Et quand il se réveille, il — il bouge pas comme avant. Y’a un décalage. Comme si ses bras arrivaient en retard. Et quand je lui donne le sein, il tète en retard. Sa bouche cherche, mais elle arrive après.</p>
+        <p class="dlg">— Montre.</p>
+        <p>La mère écarta le tissu. Drev regarda la nuque du nourrisson, si petite que la totalité du renflement C4 tenait sous la pulpe de son index, et la peau translucide laissait voir le tracé des vertèbres cervicales en dessous comme un schéma d’implantation projeté sur du tissu vivant.</p>
+        <p>Il sentit ses doigts se raidir dans les gants. Pas le Lag. Autre chose.</p>
+        <p class="dlg">— Bouge pas, dit-il au nourrisson. Puis à la mère : toi non plus.</p>
+        <p>Il déroula le câble de l’interface. La broche patient, conçue pour des adultes, était trop large pour le port occipital du nourrisson, à peine formé.</p>
+        <p class="dlg">— Bouge pas, dit-il à la mère. Je cale en contact partiel. Si mon doigt glisse, je perds le signal.</p>
+        <p>Il maintint le connecteur par la pression de son index, un contact partiel qui pouvait glisser à chaque micromouvement du nourrisson et qu’il ne pourrait pas rebrancher sans risquer d’endommager le port occipital à peine formé sous la peau translucide. L’autre extrémité dans le cadran de son orbite gauche.</p>
+        <p>Clic contre l’os.</p>
+        <p><em>Patient : V0. Âge estimé : 21 jours. Puce C4 active. Dette : 0 CR. Lag base : 0,5s. Temp. C4 : 37,8°C.</em></p>
+        <p>Zéro crédit de dette. Vingt et un jours de vie. Et le Lag de base d’un ouvrier adulte.</p>
+        <p>La température du boîtier : 0,3°C au-dessus du profil constructeur. Comme le technicien rebelle de la semaine dernière. Deux puces, deux patients, même écart.</p>
+        <p>Il n’avait pas le temps de creuser. La mère attendait.</p>
+        <p class="dlg">— Mon solde descend deux fois plus vite, dit la mère. Même la nuit.</p>
+        <p class="dlg">— Ses vannes pompent sur ton compte. Vous respirez pour deux.</p>
+        <p>Drev débrancha la broche avec précaution. Enroula le câble. Lentement.</p>
+        <p class="dlg">— Alors ? dit la mère.</p>
+        <p class="dlg">— C’est pas un moniteur.</p>
+        <p class="dlg">— Comment ça ?</p>
+        <p class="dlg">— C’est une puce C4. Même modèle que la tienne. Même modèle que la mienne. Implantée sur la quatrième vertèbre cervicale. Elle régule le flux d’air par les vannes bronchiques. Elle mesure la dette et applique le Lag correspondant.</p>
+        <p class="dlg">— Il a pas de dette. Il a trois semaines.</p>
+        <p class="dlg">— Il a le Lag de base. Zéro virgule cinq seconde. La condition V0. Il est né, il a reçu la puce, et maintenant chaque geste arrive une demi-seconde en retard.</p>
+        <p class="dlg">— C’est pour ça qu’il pleure plus ?</p>
+        <p class="dlg">— C’est pour ça qu’il pleure plus. C’est pour ça qu’il bouge lentement.</p>
+        <p>La mère ne répondit pas.</p>
+        <p class="dlg">— L’influx nerveux part du cerveau, traverse la puce, arrive aux muscles avec un décalage. Pour toi, ça ressemble à un bébé qui réagit mal.</p>
+        <p class="dlg">— Et pour lui ?</p>
+        <p class="dlg">— C’est le monde normal. Il connaîtra rien d’autre.</p>
+        <p>La mère posa la main sur le tissu. Le nourrisson bougea. Le poing minuscule s’ouvrit, se referma. Une demi-seconde après l’intention. Le décalage était visible, maintenant qu’on savait quoi regarder. Les doigts qui se tendent, le délai, puis le mouvement qui arrive.</p>
+        <p class="dlg">— Tu peux l’enlever ?</p>
+        <p class="dlg">— Non.</p>
+        <p class="dlg">— Tu peux pas désactiver le…</p>
+        <p class="dlg">— Non. Retirer une C4 tue le patient. Même un adulte. Sur un nourrisson, c’est pas une question.</p>
+        <p class="dlg">— Y’a pas un moyen de…</p>
+        <p class="dlg">— Non.</p>
+        <p>Silence. Le sifflement des turbines à 440 Hz derrière la cloison. Le souffle du nourrisson. Trop régulier, trop lisse. La puce contrôlait déjà le rythme respiratoire.</p>
+        <p class="dlg">— Alors j’ai fait ça à mon fils, dit la mère.</p>
+        <p class="dlg">— T’as signé un formulaire dans une clinique gratuite. T’as pas « fait » quoi que ce soit.</p>
+        <p class="dlg">— C’est pire.</p>
+        <p class="dlg">— Oui. C’est pire.</p>
+        <p>Drev posa le câble sur l’établi.</p>
+        <p class="dlg">— Qu’est-ce que je fais ? dit la mère.</p>
+        <p class="dlg">— Tu le reprends. Tu le gardes au chaud. Tu le nourris. Et tu regardes le décalage s’installer jusqu’à ce qu’il pense que c’est normal.</p>
+        <p class="dlg">— Et quand il aura vingt ans ?</p>
+        <p class="dlg">— Quand il aura vingt ans, le Lag sera le même. Plus la dette qu’il aura accumulée. Plus le multiplicateur. Plus tout le reste.</p>
+        <p class="dlg">— Plus le reste, répéta-t-elle.</p>
+        <p class="dlg">— Plus le reste.</p>
+        <p>La mère reprit le nourrisson. Le remit dans le harnais, sangle par sangle. Ses mains tremblaient, pas de Lag, pas de froid. Drev reconnut le geste. Le même raidissement qu’il avait senti dans ses propres gants cinq minutes plus tôt.</p>
+        <p class="dlg">— Combien je te dois ?</p>
+        <p>Elle posa sur l’établi trois filtres recyclés. En état moyen. Revendables à Syl pour soixante, soixante-cinq chacun.</p>
+        <p class="dlg">— C’est bon, dit Drev.</p>
+        <p class="dlg">— C’est pas assez.</p>
+        <p class="dlg">— J’ai dit c’est bon.</p>
+        <p>Elle le regarda. Il ne la regardait pas. Il rangeait déjà le câble.</p>
+        <p>La mère sortit. La porte se referma. Le froid du couloir entra, sortit, se tut.</p>
+        <p>Drev resta immobile. Là où le nourrisson avait reposé, il y avait encore la trace de chaleur sur le métal de l’établi.</p>
+        <p>Vingt et un jours. Première respiration, premier cri, première puce. Le gamin était déjà un actif rentable.</p>
+        <p>Il ouvrit le tiroir. Sortit le lot de données biométriques de la semaine. Cinquante-trois enregistrements compilés sur la semaine.</p>
+        <p>Plus le scan du nourrisson. Données d’implantation néonatale, premières vingt-quatre heures post-chirurgicales. Le genre de données que le gang n’avait jamais vues.</p>
+        <p>Le contact attendait au carrefour du couloir Est. Même type. Code-barres au poignet.</p>
+        <p class="dlg">— Cinquante-trois plus un néonatal, dit Drev.</p>
+        <p>Le type brancha la clé de stockage sur son terminal de poche. Vérifia. Haussa un sourcil.</p>
+        <p class="dlg">— Néonatal ? T’en as d’autres ?</p>
+        <p class="dlg">— Non.</p>
+        <p class="dlg">— Si t’en as d’autres, le tarif monte. Les données de gosses, c’est rare. Les cliniques filtrent tout.</p>
+        <p class="dlg">— Cent quatre-vingt-dix. Maintenant.</p>
+        <p class="dlg">— Cent cinquante.</p>
+        <p class="dlg">— Cent quatre-vingt-dix. C’est un prix d’ami. L’ami suivant sera moins aimable.</p>
+        <p>Le type hocha la tête.</p>
+        <p><em>Transfert entrant : 190 CR.</em></p>
+        <p>Drev remonta au Marché Gris par le croisement central. Harven était au fond du Marché, derrière sa table de composants.</p>
+        <p class="dlg">— Scanner thermique. Portable. Récup drone. Qu’est-ce que t’as ?</p>
+        <p class="dlg">— Bonjour à toi aussi.</p>
+        <p class="dlg">— Qu’est-ce que t’as ?</p>
+        <p>Harven fouilla sous la table. Sortit un boîtier noir, cabossé, grille de capteur rayée mais intacte. Grade industriel. Fréquence infrarouge, portée un mètre cinquante. Assez pour diagnostiquer une surchauffe de puce C4 sans brancher le câble.</p>
+        <p class="dlg">— Deux cents, dit Harven.</p>
+        <p class="dlg">— Cent soixante.</p>
+        <p class="dlg">— Cent quatre-vingts et je te le calibre.</p>
+        <p class="dlg">— Cent quatre-vingts, tu le calibres, et personne sait que je l’ai acheté.</p>
+        <p class="dlg">— Pour cent quatre-vingts, j’ai jamais vu ta gueule.</p>
+        <p>Drev paya.</p>
+        <p class="hud"><em>Solde : 52 CR. Dette : 380. Lag : 0,5s.</em></p>
+        <p>Le scanner tenait dans la paume. Léger. Froid. Un outil de plus pour voir ce que les yeux ne voyaient pas.</p>
+        <p>Il rentra à l’atelier. Posa le scanner à côté de la microsoudeuse et de l’extracteur pneumatique. L’établi se remplissait. Un technicien qui n’existait pas, des outils qu’Omnis ne reconnaissait pas, pour des corps que personne ne comptait.</p>
+        <p>Il ouvrit le registre. Nota :</p>
+        <p><em>Sujet : 3 semaines. Puce C4 active. Lag de base détecté : 0,5s.</em></p>
+        <p><em>Trois semaines.</em></p>
+</article>
+
+<!-- FIN D’ÉPISODE -->
+<section class="chapter-end">
+    <div class="end-rule"><span>Fin de l’épisode 4</span></div>
+    <div class="registre-card">
+        <div class="registre-title">📋 Registre du Recycleur — Entrée #4</div>
+            <p><em>Composants récupérés : 3 filtres recyclés (~200 CR via Syl). 1 scanner thermique portable acquis (180 CR, calibré par Harven).</em></p>
+            <p><em>Paiement : 200 CR (filtres) + 190 CR (lot données, 53 enregistrements + 1 néonatal). Total : 390 CR.</em></p>
+            <p><em>Dépenses : 410 CR (O2 semaine 220 + déplacements 10 + scanner thermique 180). Remboursement dette : 30 CR en jetons. Hors flux. Le compteur descend, le compte ne bouge pas.</em></p>
+            <p><em>Note : Premier cas néonatal. Puce C4 implantée à 18 jours. Le sujet ne pleure plus. Le technicien Omnis a dit « bon signe ». Rendement du mensonge : optimal.</em></p>
+            <p><em>Anomalie : temp. C4 +0,3°C (cf. Entrée #3, +0,4°C). Deux implants, même écart. Tolérance constructeur ? Défaut de série ?</em></p>
+    </div>
+    <div class="ep-banner">
+        <p><em>Partitions Fantômes se déroule huit ans avant <strong>Code d’Inertie</strong> (roman, mars 2027).</em></p>
+        <p><em>Vous lisez cet épisode sept jours avant sa sortie publique.</em></p>
+        <p><em>Prochain épisode le 20 septembre, en avance comme toujours.</em></p>
+    </div>
+    <details class="journal" id="journal">
+        <summary>
+            <span class="journal-label">Journal du Constructeur</span>
+            <span class="journal-hint">coulisses de l&rsquo;&eacute;pisode 4 &mdash; &agrave; lire apr&egrave;s</span>
+            <span class="journal-chevron" aria-hidden="true">&#9660;</span>
+        </summary>
+        <div class="journal-body">
+            <p>Cet épisode existe pour corriger un réflexe de lecture. Quand on découvre le Lag, cette latence motrice qui ralentit les corps endettés, on le range spontanément dans la case punition. Un châtiment, donc une faute, donc une justice quelque part, même perverse. C’est exactement l’idée que l’épisode 4 vient casser.</p>
+            <p>Regardez le scan du nourrisson : vingt et un jours, dette zéro, Lag 0,5 seconde. Aucune faute commise. À trois semaines, on n’a rien signé, rien dépensé, rien qui ressemble de près ou de loin à une faute. Et pourtant le poing s’ouvre une demi-seconde après l’intention. Si le Lag était une punition, il faudrait un coupable. Il n’y a qu’un contrat. Omnis ne punit pas, elle facture : le Lag de base est la condition d’accès à l’air, une clause d’entrée inscrite avant la première dépense. C’est écrit dans les conditions générales que la mère a signées dans une clinique gratuite, entre un tampon bleu et un technicien très poli qui trouvait bon signe qu’un bébé ne pleure pas pendant une injection.</p>
+            <p>La distinction n’est pas cosmétique. Une dystopie à punitions produit des bourreaux et des cachots. Du spectaculaire, et une sortie de secours pour le lecteur : il suffirait d’être innocent. Une dystopie à facturation ne laisse pas cette sortie. Personne ne vous veut du mal. Un système vous compte, c’est tout, et il compte correctement, et c’est précisément parce qu’il compte correctement qu’il n’y a personne à supplier, aucun juge à convaincre, aucune erreur à faire corriger.</p>
+            <p>Drev le formule à sa façon : « C’est le monde normal. Il connaîtra rien d’autre. » La phrase la plus dure de l’épisode décrit une calibration, rien d’autre.</p>
+            <p>Et relisez la fin de l’entrée du Registre. Drev y consigne un écart de température, avec un renvoi à l’entrée précédente. Il pose la question en technicien : tolérance constructeur, ou défaut de série ? La réponse n’est pas dans cet épisode.</p>
+            <p class="journal-sign">C.E. Rochard &middot; Archive R&eacute;seau C3</p>
+        </div>
+    </details>
+
+    <nav class="ep-nav" aria-label="Navigation entre épisodes">
+        <a href="episode-03.html" class="end-btn secondary"><span>&#8592;</span> Épisode 3</a>
+        <a href="transmissions.html" class="end-btn secondary">Sommaire</a>
+        <a href="episode-05.html" class="end-btn">Épisode 5 <span>&#8594;</span></a>
+    </nav>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Olymos — C.E.Rochard</div>
+        <nav class="footer-nav" aria-label="Liens de pied de page">
+            <a href="index.html">Univers</a>
+            <a href="carte-secteurs.html">Carte</a>
+            <a href="chronologie.html">Chronologie</a>
+            <a href="profil-citoyen.html">Profil Citoyen</a>
+            <a href="roman.html">Le Roman</a>
+            <a href="spin-off.html">Le Spin-off</a>
+            <a href="dossier-omnis.html">Archives Classifiées</a>
+            <a href="a-propos.html">L’auteur</a>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="politique-confidentialite.html">Confidentialité</a>
+        </nav>
+        <p class="footer-copy">Copyright &copy; 2026 &mdash; C.E.Rochard. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème clair/sombre" aria-pressed="false" title="Basculer le thème">
+    <span class="icon-sun">&#9728;</span>
+    <span class="icon-moon">&#9790;</span>
+</button>
+
+<script>
+/* ── Accréditation C3 : activation par lien, puis contrôle ── */
+(function() {
+    var ok = false;
+    try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('acces') === 'c3') {
+            localStorage.setItem('olymos-acces', 'c3');
+            params.delete('acces');
+            var q = params.toString();
+            window.history.replaceState({}, '',
+                window.location.pathname + (q ? '?' + q : '') + window.location.hash);
+        }
+        ok = (localStorage.getItem('olymos-acces') === 'c3');
+    } catch (e) { ok = false; }
+
+    if (!ok) {
+        var overlay = document.getElementById('gateOverlay');
+        if (overlay) {
+            overlay.classList.add('active');
+            document.body.classList.add('locked');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+})();
+</script>
+
+<script>
+/* ── Thème clair / sombre ── */
+(function() {
+    var toggle = document.getElementById('themeToggle');
+    var saved = null;
+    try { saved = localStorage.getItem('dossier-theme'); } catch (e) {}
+    if (saved === 'light') {
+        document.documentElement.classList.add('light');
+        toggle.setAttribute('aria-pressed', 'true');
+    }
+    toggle.addEventListener('click', function() {
+        var isLight = document.documentElement.classList.toggle('light');
+        toggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        try { localStorage.setItem('dossier-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+    });
+})();
+</script>
+
+<script>
+/* ── Progression de lecture ── */
+(function() {
+    var bar = document.getElementById('progressBar');
+    var article = document.getElementById('chapterBody');
+    if (!bar || !article) return;
+
+    function update() {
+        var start = article.offsetTop;
+        var span = article.offsetHeight - window.innerHeight + 200;
+        var pos = window.scrollY - start + 200;
+        var pct = span > 0 ? (pos / span) * 100 : 0;
+        bar.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+})();
+</script>
+
+<script>
+/* ── Menu hamburger mobile ── */
+(function() {
+    var btn = document.getElementById('navHamburger');
+    var overlay = document.getElementById('navMobileOverlay');
+    var closeBtn = document.getElementById('navMobileClose');
+    if (!btn || !overlay) return;
+    function openMenu() {
+        btn.classList.add('open'); overlay.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+        btn.classList.remove('open'); overlay.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+    btn.addEventListener('click', function() {
+        if (overlay.classList.contains('open')) closeMenu(); else openMenu();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    overlay.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', closeMenu);
+    });
+})();
+</script>
+
+</body>
+</html>
