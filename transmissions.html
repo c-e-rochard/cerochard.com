@@ -802,8 +802,8 @@
    PROCÉDURE HEBDOMADAIRE (rien d'autre à faire dans ce fichier) :
      J-7 : déposer episode-NN.html sur le dépôt, envoyer la newsletter.
      J   : dans la ligne de l'épisode ci-dessus, remplacer les trois href="#"
-           par les vraies URLs et retirer la classe "todo". Le titre devient
-           automatiquement un lien vers Wattpad. */
+           par les vraies URLs et retirer la classe "todo". Le titre, lui,
+           pointe automatiquement vers episode-NN.html dès la révélation. */
 (function() {
     var AVANCE_C3 = 7; /* jours d'avance des abonnés */
     var isC3 = false;
@@ -841,20 +841,12 @@
             statusEl.textContent = 'Paru';
         }
 
-        /* Le titre hérite du lien Wattpad dès qu'il est activé.
-           Tant qu'il ne l'est pas, un abonné est renvoyé vers la page du site. */
-        var w = ep.querySelector('.ep-link[data-p="Wattpad"]');
-        var href = null, cible = null;
-        if (w && !w.classList.contains('todo') && w.getAttribute('href') !== '#') {
-            href = w.getAttribute('href'); cible = '_blank';
-        } else if (isC3 && num) {
-            href = 'episode-' + num + '.html';
-        }
-        if (href) {
+        /* Le titre pointe toujours vers la page de l'épisode sur le site
+           (episode-NN.html). Les plateformes restent sur les boutons W / N / P. */
+        if (num) {
             var a = document.createElement('a');
-            a.href = href;
+            a.href = 'episode-' + num + '.html';
             a.textContent = titleEl.textContent;
-            if (cible) { a.target = cible; a.rel = 'noopener'; }
             titleEl.textContent = '';
             titleEl.appendChild(a);
         }
