@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Épisode 8 — L’Ingénieur | Partitions Fantômes · C.E. Rochard</title>
+    <meta name="description" content="Épisode 8 du feuilleton Partitions Fantômes — L’Ingénieur. Univers Olymos, huit ans avant Code d’Inertie.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --bg-deep:        #06060d;
+            --bg-dark:        #09091a;
+            --bg-card:        #0e0e1f;
+            --bg-card-border: #141430;
+            --cyan:           #00d4ff;
+            --cyan-dim:       rgba(0, 212, 255, 0.20);
+            --cyan-glow:      rgba(0, 212, 255, 0.07);
+            --violet:         #7c3aed;
+            --violet-dim:     rgba(124, 58, 237, 0.25);
+            --orange:         #ff6b35;
+            --orange-dim:     rgba(255, 107, 53, 0.20);
+            --red:            #ff3b5c;
+            --text-primary:   #e8e8f2;
+            --text-secondary: #8a8aaa;
+            --text-read:      #bcbcd2;
+            --text-muted:     #44445a;
+            --text-dim:       #2a2a42;
+            --border:         rgba(255,255,255,0.07);
+            --border-cyan:    rgba(0, 212, 255, 0.25);
+            --border-orange:  rgba(255, 107, 53, 0.25);
+            --font-title:     'Orbitron', monospace;
+            --font-body:      'Inter', sans-serif;
+        }
+        html.light {
+            --bg-deep: #d8d8e2; --bg-dark: #d0d0dc; --bg-card: #dcdce8;
+            --bg-card-border: #b8b8cc;
+            --cyan: #007a9e; --cyan-dim: rgba(0,122,158,0.15); --cyan-glow: rgba(0,122,158,0.07);
+            --violet: #5b21b6; --violet-dim: rgba(91,33,182,0.15);
+            --orange: #b84500; --orange-dim: rgba(184,69,0,0.12);
+            --red: #c0213c;
+            --text-primary: #12122a; --text-secondary: #38385a;
+            --text-read: #24243f;
+            --text-muted: #70709a; --text-dim: #9898b8;
+            --border: rgba(0,0,0,0.10); --border-cyan: rgba(0,122,158,0.28);
+            --border-orange: rgba(184,69,0,0.28);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg-deep); color: var(--text-primary);
+            font-family: var(--font-body); line-height: 1.75; overflow-x: hidden;
+        }
+
+        /* ── BARRE DE PROGRESSION DE LECTURE ── */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px;
+            background: var(--cyan); z-index: 1001; width: 0%;
+            transition: width 0.1s linear; pointer-events: none;
+            box-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem; background: rgba(6,6,13,0.94);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+        html.light .navbar { background: rgba(208,208,220,0.92); }
+        .nav-brand { font-family: var(--font-title); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 1.8rem; position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+        .nav-link { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .nav-link:hover, .nav-link.active { color: var(--cyan); }
+        .nav-classified { font-family: var(--font-title); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.38rem 0.85rem; border-radius: 3px; text-decoration: none; white-space: nowrap; transition: all 0.2s ease; }
+        .nav-classified:hover { background: var(--orange-dim); }
+        .nav-status { display: flex; align-items: center; gap: 0.55rem; font-family: var(--font-title); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+        .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.35; transform:scale(0.75); } }
+
+        .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 6px; }
+        .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--cyan); transition: transform 0.25s ease, opacity 0.25s ease; }
+        .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+        .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .nav-mobile-overlay {
+            display: none; position: fixed; inset: 0; z-index: 999;
+            background: var(--bg-deep); flex-direction: column;
+            align-items: center; justify-content: center; gap: 1.6rem;
+            opacity: 0; transform: translateY(-12px);
+            transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+        .nav-mobile-overlay.open { display: flex; opacity: 1; transform: translateY(0); }
+        .nav-mobile-close { position: absolute; top: 1.4rem; right: 1.6rem; background: transparent; border: none; color: var(--cyan); font-size: 1.4rem; cursor: pointer; }
+        .nav-mobile-links { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+        .nav-mobile-link { font-family: var(--font-title); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; }
+        .nav-mobile-link.active, .nav-mobile-link:hover { color: var(--cyan); }
+        .nav-mobile-classified { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); border: 1px solid rgba(255,107,53,0.35); padding: 0.6rem 1.2rem; border-radius: 3px; text-decoration: none; }
+
+        /* ── EN-TÊTE DU CHAPITRE ── */
+        .chapter-head {
+            max-width: 720px; margin: 0 auto;
+            padding: 8rem 2rem 0;
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: var(--font-title); font-size: 0.58rem;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--text-muted); text-decoration: none;
+            transition: color 0.2s ease; margin-bottom: 2.5rem;
+        }
+        .back-link:hover { color: var(--cyan); }
+        .chapter-eyebrow {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 1.2rem;
+        }
+        .chapter-num {
+            font-family: var(--font-title); font-size: 0.62rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.7rem;
+        }
+        .chapter-title {
+            font-family: var(--font-title); font-weight: 900;
+            font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+            line-height: 1.2; letter-spacing: 0.02em;
+            text-transform: uppercase; color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        /* Fiche technique — reprend le vocabulaire des dossiers Omnis */
+        .chapter-meta {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--border);
+            border: 1px solid var(--border); border-radius: 4px;
+            overflow: hidden; margin-bottom: 3.5rem;
+        }
+        .meta-cell { background: var(--bg-card); padding: 0.9rem 1rem; }
+        .meta-label {
+            font-family: var(--font-title); font-size: 0.46rem;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.35rem;
+        }
+        .meta-value {
+            font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; color: var(--cyan); letter-spacing: 0.04em;
+        }
+
+        /* ── CORPS DU TEXTE ── */
+        .chapter-body {
+            max-width: 660px; margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        .chapter-body p {
+            font-size: 1.06rem; line-height: 1.9;
+            color: var(--text-read); margin-bottom: 1.5rem;
+        }
+        .chapter-body p em { color: var(--text-primary); font-style: italic; }
+
+        /* Lettrine */
+        .chapter-body p.open { margin-bottom: 1.5rem; }
+        .chapter-body .cap {
+            float: left; font-family: var(--font-title); font-weight: 700;
+            font-size: 2.7rem; line-height: 0.9; color: var(--cyan);
+            padding: 0.35rem 0.65rem 0 0;
+        }
+
+        /* Répliques : léger retrait, texte plus clair */
+        .chapter-body p.dlg {
+            color: var(--text-primary);
+            padding-left: 1.1rem;
+            border-left: 1px solid rgba(0,212,255,0.14);
+        }
+
+        /* Interjections système — issues du manuscrit, pas ajoutées */
+        .chapter-body p.sys {
+            font-family: var(--font-title);
+            font-size: 0.72rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--cyan);
+            background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.85rem 1.1rem; margin: 2.2rem 0;
+            line-height: 1.6;
+        }
+
+        /* ── FIN DE CHAPITRE ── */
+        .chapter-end {
+            max-width: 660px; margin: 0 auto 5rem;
+            padding: 0 2rem;
+        }
+        .end-rule {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .end-rule::before, .end-rule::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .end-rule span {
+            font-family: var(--font-title); font-size: 0.55rem;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--text-muted); white-space: nowrap;
+        }
+        .end-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan);
+            border-radius: 4px; padding: 2rem 1.8rem;
+        }
+        .end-title {
+            font-family: var(--font-title); font-size: 0.9rem;
+            font-weight: 700; color: var(--text-primary);
+            margin-bottom: 0.8rem; letter-spacing: 0.04em;
+        }
+        .end-text {
+            font-size: 0.92rem; color: var(--text-secondary);
+            line-height: 1.8; margin-bottom: 1.6rem;
+        }
+        .end-text strong { color: var(--text-primary); font-weight: 500; }
+        .end-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .end-btn {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            font-family: var(--font-title); font-size: 0.62rem;
+            font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--cyan); border: 1px solid var(--cyan);
+            border-radius: 3px; padding: 0.72rem 1.4rem;
+            text-decoration: none; transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .end-btn:hover { background: var(--cyan-dim); box-shadow: 0 0 18px rgba(0,212,255,0.2); }
+        .end-btn.secondary { color: var(--text-muted); border-color: var(--border); }
+        .end-btn.secondary:hover { color: var(--text-secondary); background: transparent; box-shadow: none; }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--bg-dark); border-top: 1px solid var(--border);
+            padding: 2.8rem 2rem;
+        }
+        .footer-inner {
+            max-width: 900px; margin: 0 auto;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 1rem; text-align: center;
+        }
+        .footer-brand { font-family: var(--font-title); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--cyan); text-transform: uppercase; }
+        .footer-nav { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+        .footer-nav a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+        .footer-nav a:hover { color: var(--text-secondary); }
+        .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-title); letter-spacing: 0.08em; }
+
+        /* ── THEME TOGGLE ── */
+        .theme-toggle {
+            position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 200;
+            width: 46px; height: 46px; border: 1px solid var(--border-cyan);
+            border-radius: 50%; background: var(--bg-card); color: var(--cyan);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; transition: all 0.3s ease;
+            backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .theme-toggle:hover { transform: scale(1.1); border-color: var(--cyan); }
+        .theme-toggle .icon-sun { display: inline; } .theme-toggle .icon-moon { display: none; }
+        html.light .theme-toggle .icon-sun { display: none; } html.light .theme-toggle .icon-moon { display: inline; }
+
+        /* ── PORTAIL C3 ── */
+        .gate-overlay {
+            display: none; position: fixed; inset: 0; z-index: 2000;
+            background: var(--bg-deep); backdrop-filter: blur(10px);
+            align-items: center; justify-content: center; padding: 1.5rem;
+        }
+        .gate-overlay.active { display: flex; }
+        body.locked .chapter-body,
+        body.locked .chapter-end { filter: blur(7px); opacity: 0.25; user-select: none; }
+        .gate-box {
+            max-width: 420px; width: 100%; background: var(--bg-card);
+            border: 1px solid var(--border-orange); border-radius: 5px; overflow: hidden;
+        }
+        .gate-top {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--border);
+        }
+        .gate-top-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulse-dot 1.2s ease infinite; }
+        .gate-top-label { font-family: var(--font-title); font-size: 0.46rem; white-space: nowrap; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+        .gate-body { padding: 2rem 1.8rem; }
+        .gate-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .gate-title { font-family: var(--font-title); font-size: 0.95rem; font-weight: 700; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+        .gate-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+        .gate-text strong { color: var(--text-primary); }
+        .gate-cta {
+            display: block; font-family: var(--font-title); font-size: 0.72rem;
+            font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+            text-align: center; color: var(--bg-deep); background: var(--orange);
+            padding: 0.85rem 1.2rem; border-radius: 3px; text-decoration: none;
+            margin-bottom: 1rem; transition: box-shadow 0.25s ease;
+        }
+        .gate-cta:hover { box-shadow: 0 0 24px rgba(255,107,53,0.5); }
+        .gate-code { font-family: var(--font-title); font-size: 0.48rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); text-align: center; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .nav-links, .nav-status { display: none; }
+            .nav-hamburger { display: flex; }
+        }
+        @media (max-width: 640px) {
+            .chapter-head { padding: 6.5rem 1.5rem 0; }
+            .chapter-body, .chapter-end { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .chapter-meta { grid-template-columns: 1fr; }
+            .chapter-body p { font-size: 1rem; }
+            .footer-nav { gap: 1.1rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            html { scroll-behavior: auto; }
+        }
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--cyan); outline-offset: 3px;
+        }
+    
+
+        /* ── Éléments feuilleton (Partitions Fantômes) ── */
+        .chapter-body p.hud {
+            color: var(--cyan); background: var(--cyan-glow);
+            border-left: 2px solid var(--cyan);
+            padding: 0.65rem 1.1rem; font-size: 0.98rem;
+        }
+        .chapter-body p.hud em { color: var(--cyan); }
+        .poster {
+            border: 1px solid var(--border-cyan); background: var(--bg-card);
+            border-radius: 4px; padding: 1.4rem 1.5rem; margin: 2.2rem 0;
+            text-align: center;
+        }
+        .poster p {
+            font-family: var(--font-title); font-size: 0.64rem;
+            letter-spacing: 0.12em; color: var(--text-secondary);
+            line-height: 2; margin-bottom: 0.35rem;
+        }
+        .poster p:first-child { color: var(--cyan); font-size: 0.7rem; }
+        .poster p:last-child { margin-bottom: 0; }
+        .registre-card {
+            background: var(--bg-card); border: 1px solid var(--border-cyan);
+            border-top: 2px solid var(--cyan); border-radius: 4px;
+            padding: 1.8rem; margin-bottom: 2.2rem;
+        }
+        .registre-title {
+            font-family: var(--font-title); font-size: 0.76rem; font-weight: 700;
+            color: var(--cyan); letter-spacing: 0.07em; margin-bottom: 1.1rem;
+        }
+        .registre-card p {
+            font-size: 0.92rem; color: var(--text-secondary); font-style: italic;
+            line-height: 1.8; margin-bottom: 0.55rem;
+        }
+        .registre-card p:last-child { margin-bottom: 0; }
+        .ep-banner { text-align: center; margin-bottom: 2.6rem; }
+        .ep-banner p { font-size: 0.85rem; color: var(--text-muted); font-style: italic; line-height: 1.9; }
+        .ep-banner strong { color: var(--text-secondary); font-weight: 500; }
+        .ep-nav { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: space-between; }
+        .ep-nav .spacer { flex: 1; }
+
+        /* ── Journal du Constructeur (archive C3) ── */
+        .journal {
+            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 4px; margin-bottom: 2.2rem; overflow: hidden;
+        }
+        .journal[open] { border-color: var(--border-cyan); }
+        .journal > summary {
+            list-style: none; cursor: pointer; padding: 1.15rem 1.5rem;
+            display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap;
+        }
+        .journal > summary::-webkit-details-marker { display: none; }
+        .journal > summary:hover { background: rgba(255,255,255,0.03); }
+        .journal > summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+        .journal-label {
+            font-family: var(--font-title); font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.09em; color: var(--cyan); text-transform: uppercase;
+        }
+        .journal-hint {
+            font-size: 0.78rem; color: var(--text-muted); font-style: italic;
+        }
+        .journal-chevron {
+            margin-left: auto; color: var(--text-muted); font-size: 0.85rem;
+            transition: transform 0.2s ease;
+        }
+        .journal[open] .journal-chevron { transform: rotate(180deg); }
+        .journal-body {
+            padding: 0 1.5rem 1.6rem; border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .journal-body p {
+            font-size: 0.95rem; color: var(--text-secondary);
+            line-height: 1.85; margin: 1.2rem 0 0;
+        }
+        .journal-sign {
+            font-family: var(--font-title); font-size: 0.66rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--text-muted); margin-top: 1.5rem;
+        }
+        @media (max-width: 640px) {
+            .journal > summary { padding: 1rem 1.1rem; }
+            .journal-body { padding: 0 1.1rem 1.3rem; }
+            .journal-hint { flex-basis: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- PORTAIL D’ACCRÉDITATION -->
+<div class="gate-overlay" id="gateOverlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-box">
+        <div class="gate-top">
+            <span class="gate-top-dot"></span>
+            <span class="gate-top-label">Omnis Corp · Contrôle d’accréditation · Terminal 7-C</span>
+        </div>
+        <div class="gate-body">
+            <div class="gate-icon">🔒</div>
+            <p class="gate-title" id="gateTitle">Accréditation C3 requise</p>
+            <p class="gate-text">
+                L’Épisode 8 de <strong>Partitions Fantômes</strong> est diffusé en avant-première
+                au <strong>Réseau prioritaire</strong>. Rejoignez la transmission pour
+                obtenir votre accréditation — l’accès est immédiat.<br><br>
+                À partir du <strong>18 oct. 2026</strong>, l’épisode est aussi en lecture
+                libre sur Wattpad, Nocteller et Purrfiction.
+            </p>
+            <a href="index.html#newsletter" class="gate-cta">Demander l’accréditation C3</a>
+            <p class="gate-code">ERR_AUTH · CODE 403 · DIFFUSION RESTREINTE</p>
+        </div>
+    </div>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar" aria-label="Navigation principale">
+    <a href="index.html" class="nav-brand">C.E.Rochard</a>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">Univers</a>
+        <a href="roman.html" class="nav-link">Le Roman</a>
+        <a href="spin-off.html" class="nav-link active" aria-current="page">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-classified">🔒 Archives Classifiées</a>
+    </div>
+    <div class="nav-status">
+        <span class="nav-dot"></span>
+        Diffusion C3
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="nav-mobile-overlay" id="navMobileOverlay" aria-hidden="true">
+    <button class="nav-mobile-close" id="navMobileClose" aria-label="Fermer le menu">&#x2715;</button>
+    <div class="nav-mobile-links">
+        <a href="index.html" class="nav-mobile-link">Univers</a>
+        <a href="roman.html" class="nav-mobile-link">Le Roman</a>
+        <a href="spin-off.html" class="nav-mobile-link active">Le Spin-off</a>
+        <a href="chronologie.html" class="nav-mobile-link">Chronologie</a>
+        <a href="carte-secteurs.html" class="nav-mobile-link">Carte</a>
+        <a href="profil-citoyen.html" class="nav-mobile-link">Profil</a>
+        <a href="dossier-omnis.html" class="nav-mobile-classified">🔒 Archives Classifiées</a>
+    </div>
+</div>
+
+<!-- EN-TÊTE -->
+<header class="chapter-head">
+    <a href="transmissions.html" class="back-link"><span>&#8592;</span> Sommaire du feuilleton</a>
+    <div class="chapter-eyebrow">Partitions Fantômes · Avant-première Réseau C3</div>
+    <div class="chapter-num">Épisode 8</div>
+    <h1 class="chapter-title">L’Ingénieur</h1>
+
+    <div class="chapter-meta">
+        <div class="meta-cell">
+            <div class="meta-label">Registre</div>
+            <div class="meta-value">Entrée #8</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Localisation</div>
+            <div class="meta-value">Niveau 50 · Atelier</div>
+        </div>
+        <div class="meta-cell">
+            <div class="meta-label">Sortie publique</div>
+            <div class="meta-value">18 oct. 2026</div>
+        </div>
+    </div>
+</header>
+
+<!-- CORPS DE L’ÉPISODE -->
+<article class="chapter-body" id="chapterBody">
+        <p class="open"><span class="cap">L</span>e verrou tourna à vide.</p>
+        <p>Drev retira la clé. La réinséra. Le pêne était déjà rentré. Pas forcé : rentré. Aucune marque sur la serrure, aucun jeu dans les gonds. Quelqu’un avait ouvert sa porte comme on ouvre la sienne.</p>
+        <p>Il poussa le battant du plat de la main et resta sur le seuil.</p>
+        <p>L’homme se tenait au milieu de l’atelier, les mains le long du corps, gantées. Il ne touchait à rien. Pas un regard vers le plafond, ni vers le tabouret, ni vers les câbles. Il regardait le tiroir du bas de l’établi. Une demi-seconde. Détourna les yeux trop vite.</p>
+        <p>Combinaison gris anthracite, coupe civile, non marquée. Étui plat à la ceinture. Ni une arme, ni un outil V0. Le contour d’un instrument long et fin sous le tissu, comme une pince de précision.</p>
+        <p>Masque grade 2, zéro pour cent de fuite. Gants fins, souples, doublure thermique invisible. Les doigts bougeaient, libres.</p>
+        <p>Drev cligna. Sa lentille afficha :</p>
+        <p class="hud"><em>Solde : 128 CR. Dette : 600. Lag : 0,6s. Masque : 14%.</em></p>
+        <p>Ses propres chiffres. Pas ceux de l’autre. Pas un patient.</p>
+        <p class="dlg">— Qu’est-ce que tu cherches ?</p>
+        <p class="dlg">— Fermez la porte, dit l’homme. À clé.</p>
+        <p>Drev ne bougea pas du seuil.</p>
+        <p class="dlg">— C’est mon verrou.</p>
+        <p class="dlg">— C’est pour ça que je vous laisse le fermer.</p>
+        <p>Drev entra. Tourna la clé.</p>
+        <p>L’homme attendit que le cliquetis cesse.</p>
+        <p class="dlg">— Je cherche des composants, dit-il. Pas une consultation.</p>
+        <p class="dlg">— Le tarif est le même.</p>
+        <p class="dlg">— Ça, j’ai compris.</p>
+        <p>Il sortit une feuille de la poche intérieure de sa combinaison. Papier thermique récent, plié en quatre. Pas un croquis griffonné. Pas une liste recopiée à la main. Trois lignes de références fabricant, imprimées en police propre.</p>
+        <p class="dlg">— Un connecteur d’accès grade 4, série K7-Omnis. Un câble à fibre monomode, calibre 200 microns, longueur trente centimètres minimum. Un oscillateur piézoélectrique 4,8 GHz, tolérance à cinq pour cent. Plus fine si tu l’as.</p>
+        <p>Drev ne bougea pas. Il écoutait les mots.</p>
+        <p>Grade 4. Il connaissait grade 1, grade 2, grade 3. Les V0 avaient du grade 1. Les Prioritaires, du grade 3. Les Nettoyeurs aussi, parfois grade 2 s’ils étaient de service courant. Grade 4, c’était un mot absent des manuels Omnis. En dix ans, jamais croisé.</p>
+        <p class="dlg">— Grade 4, répéta Drev.</p>
+        <p class="dlg">— Oui.</p>
+        <p class="dlg">— Ça n’existe pas.</p>
+        <p>L’homme le regarda. Pas d’agacement. Une attente patiente, presque ennuyée, le genre de patience que développent les gens qui n’ont jamais eu à négocier un prix dans leur vie.</p>
+        <p class="dlg">— Ça existe. C’est pas au catalogue public.</p>
+        <p class="dlg">— Et tu sais comment s’appelle un composant pas au catalogue public.</p>
+        <p class="dlg">— Je sais l’acheter. Je sais le payer. C’est tout ce qui doit vous intéresser.</p>
+        <p class="dlg">— Qui le fabrique ?</p>
+        <p class="dlg">— Hors sujet.</p>
+        <p class="dlg">— Qui l’utilise ?</p>
+        <p class="dlg">— Pareil.</p>
+        <p class="dlg">— Combien de gens dans la Tour savent qu’il existe ?</p>
+        <p>L’homme ne répondit pas tout de suite.</p>
+        <p class="dlg">— Moins que vous ne pensez.</p>
+        <p>Drev s’assit sur le tabouret. La fuite de son masque sifflait à chaque expiration, un filet fin qui sortait par la fissure du bord gauche depuis que la microsoudeuse avait heurté le polymère la semaine dernière. Un bruit de plus. Turbines à 440 Hz, Chantilly lointaine dans le couloir, compteur intérieur.</p>
+        <p class="dlg">— Le connecteur grade 4, dit Drev. À quoi ça sert ?</p>
+        <p class="dlg">— Diagnostic.</p>
+        <p class="dlg">— Diagnostic de quoi ?</p>
+        <p class="dlg">— Personnel.</p>
+        <p>Silence. Les turbines derrière la cloison.</p>
+        <p class="dlg">— Oscillateur piézoélectrique à 4,8 GHz, dit Drev. Les signaux biométriques montent à 900 MHz max. Qu’est-ce que tu veux écouter au-dessus ?</p>
+        <p class="dlg">— Ce qui passe au-dessus.</p>
+        <p class="dlg">— Sur une puce C4 ?</p>
+        <p>L’homme ne répondit pas. Il attendait.</p>
+        <p>Drev se leva. Ouvrit le tiroir du bas. Fouilla dans la deuxième rangée, celle où il stockait les composants récupérés au fil des ans sur des puces mortes, des masques déclassés, des lots Omnis que Harven lui refilait contre des filtres et du silence.</p>
+        <p>Un connecteur occipital grade 2, neuf sous emballage. Un connecteur grade 3, démonté d’un Nettoyeur l’année dernière. Un câble à fibre monomode, calibre 205 microns, trente-deux centimètres, récupéré sur un diagnostic manuel déclassé quatre ans plus tôt.</p>
+        <p>Pas de grade 4. Pas d’oscillateur 4,8 GHz.</p>
+        <p class="dlg">— J’ai le câble. J’ai du grade 2, du grade 3. Rien au-dessus.</p>
+        <p class="dlg">— Le grade 3, je prends.</p>
+        <p class="dlg">— Démonté. Vingt mois de stockage. Peut-être cuit.</p>
+        <p class="dlg">— Je regarde.</p>
+        <p>L’homme retira ses gants. Lentement. Le gauche d’abord, puis le droit. Il les posa sur le coin de l’établi, doublure repliée vers l’intérieur.</p>
+        <p>Drev posa le connecteur sur l’établi. L’homme le prit. Il ne le toucha pas comme un mécano. Il le toucha comme un type qui avait conçu l’objet.</p>
+        <p>Il le tourna entre deux doigts, examina la base, vérifia un repère gravé sur la tranche. Un numéro de série à six chiffres. Drev ne l’avait jamais regardé. Pas en dix ans.</p>
+        <p class="dlg">— Lot 4413. Calibration usine 2138, dit l’homme. Tolérance résiduelle 0,8 micron. Acceptable.</p>
+        <p>Drev cligna. Il n’avait pas cité de chiffres. L’homme les avait lus sur le repère gravé. Et il avait interprété les quatre premiers chiffres du numéro comme une date de calibration usine.</p>
+        <p>Il savait. Pas approximativement. Pas en technicien. En concepteur.</p>
+        <p class="dlg">— Tu lis les numéros dans le sens de la fabrication, dit Drev. Personne fait ça à part ceux qui les ont gravés.</p>
+        <p class="dlg">— Vous extrapolez.</p>
+        <p class="dlg">— Je décris.</p>
+        <p class="dlg">— Le câble.</p>
+        <p>Drev le tendit. Même examen. L’homme tira la gaine d’un millimètre, vérifia l’amorce optique, passa le pouce sur la tranche.</p>
+        <p class="dlg">— Monomode. 205 microns. Tolérance acceptable. Pas de micro-fracture.</p>
+        <p class="dlg">— Tarif, dit Drev. Grade 3 démonté, cuit à moitié : quatre-vingts. Câble monomode trente centimètres usage : soixante. Total cent quarante.</p>
+        <p>L’homme sortit une clé de transfert de la poche intérieure de sa combinaison. Modèle fin, noir, crypté. Pas la clé d’un V0. Pas celle d’un cadre Synthetix non plus. Un format intermédiaire.</p>
+        <p>Drev l’avait vu une fois, sur un transfert entre stations Omnis. Harven lui avait demandé un avis technique au Marché.</p>
+        <p class="dlg">— Deux cent cinquante, dit l’homme. Je prends les deux. Pas de reçu.</p>
+        <p class="dlg">— J’ai dit cent quarante.</p>
+        <p class="dlg">— Vous avez dit un prix. Je paie le vrai. Le vrai inclut votre silence.</p>
+        <p class="dlg">— Le silence se vend pas par défaut.</p>
+        <p class="dlg">— Maintenant si.</p>
+        <p>Drev ne broncha pas. Il brancha la clé sur son interface.</p>
+        <p><em>Transfert entrant : 250 CR. Solde : 378 CR. Dette : 600. Lag : 0,6s.</em></p>
+        <p>Cent dix crédits de prime au silence. Pour deux composants dont un démonté. Un type qui savait que le tarif du silence dépassait celui des pièces.</p>
+        <p>L’homme rangea les composants dans l’étui plat de sa ceinture. Méthodique, sans hésitation. La poche intérieure avait un compartiment moulé à la forme exacte du connecteur grade 3. Pas bricolé à la lime. Fabriqué pour.</p>
+        <p class="dlg">— T’as l’étui fait pour la pièce, dit Drev.</p>
+        <p class="dlg">— Oui.</p>
+        <p class="dlg">— Alors l’oscillateur, t’as aussi un compartiment.</p>
+        <p>L’homme le regarda. Pas longtemps.</p>
+        <p class="dlg">— Vous n’avez pas l’oscillateur.</p>
+        <p class="dlg">— Non. Mais le compartiment droit dans ton étui a la forme d’un composant 4,8 GHz. Cylindre court, diamètre sept millimètres, embase plate. Je peux voir, y’a un repère moulé.</p>
+        <p>Silence. Un quart de seconde.</p>
+        <p class="dlg">— Vous remarquez des choses, dit l’homme.</p>
+        <p class="dlg">— Pour vivre.</p>
+        <p class="dlg">— Si un jour l’oscillateur passe par ici, prévenez Harven. Il saura me joindre.</p>
+        <p class="dlg">— Harven te connaît ?</p>
+        <p class="dlg">— Harven a un code pour me joindre. Il ne sait rien de plus.</p>
+        <p>Drev nota mentalement. La clé cryptée. Le canal anonyme via Harven. Un type du Sommet qui passait par le même intermédiaire que les gangs du 52. Et qui s’arrangeait pour que cet intermédiaire ne le connaisse pas.</p>
+        <p class="dlg">— Tu viens d’où ?</p>
+        <p class="dlg">— Question interdite.</p>
+        <p class="dlg">— Pas interdite. Pas payée.</p>
+        <p>L’homme hésita. Il fit un geste. Pas un geste évasif. Un geste technique.</p>
+        <p>Sa main droite se porta à sa nuque. Pression brève sous la quatrième vertèbre cervicale. Le geste d’un mécano qui vérifie l’intégrité d’une soudure critique. Le réflexe de quelqu’un qui a posé la pièce lui-même. Ou qui l’a conçue.</p>
+        <p>Puis il redescendit la main. Trop vite. Un geste qu’il faisait peut-être cent fois par jour, et qu’il venait de faire devant quelqu’un qui regardait.</p>
+        <p>Implant C4. Il en avait un. Et il le contrôlait, ou croyait le contrôler, ou vérifiait qu’il ne le contrôlait pas encore.</p>
+        <p class="dlg">— Bon diagnostic, dit Drev.</p>
+        <p class="dlg">— Pardon ?</p>
+        <p class="dlg">— Le diagnostic personnel. Bonne chance.</p>
+        <p>L’homme ne répondit pas. Il remit ses gants. Le droit d’abord. Puis le gauche, plus lentement.</p>
+        <p>Le même ordre que le cadre Synthetix la semaine précédente. Les Prioritaires mettaient tous le droit d’abord.</p>
+        <p>Il se dirigea vers la porte. S’arrêta. Ne se retourna pas.</p>
+        <p class="dlg">— Vous n’avez pas vu de grade 4 aujourd’hui. Vous n’avez pas vu de fibre monomode non plus.</p>
+        <p class="dlg">— J’ai vu passer un type qui cherchait du silicone pour son masque. J’avais plus. Il est reparti.</p>
+        <p class="dlg">— Bonne mémoire.</p>
+        <p>La porte s’ouvrit. Se referma. Gonds huilés. Pas un bruit.</p>
+        <p>Drev resta debout.</p>
+        <p>Il regarda l’établi. Le câble était parti. Le connecteur grade 3 aussi. Deux pièces qu’il avait gardées des années sans savoir à qui les vendre. Un type avait débarqué avec la liste exacte, la clé exacte, le prix exact.</p>
+        <p>Il frotta avec un chiffon d’alcool la trace de sang séché qu’il n’avait pas fini d’essuyer la semaine dernière, celle du Nettoyeur. La trace partit. Pas complètement. Elle ne partait jamais complètement.</p>
+        <p>Il ouvrit le registre. La page était vide.</p>
+        <p><em>Un type du Sommet qui pue la culpabilité, nota-t-il. Sait ce qu’il achète. Fait un diagnostic personnel sur sa propre puce. Composants grade 4. Signaux au-dessus de 900 MHz. Ne revient pas, sauf pour l’oscillateur.</em></p>
+        <p>Il referma le registre. L’atelier sentait différent. Pas la sueur, pas la graisse de conduit. Quelque chose de propre, d’artificiel, un fond de polymère de laboratoire qui collait aux parois comme un résidu de filtre neuf.</p>
+        <p class="hud"><em>Solde : 128 CR. Dette : 570. Lag : 0,6s.</em></p>
+        <p>Trente crédits de dette remboursée. Un luxe qu’il ne s’était pas offert depuis quatre semaines.</p>
+        <p>Il reposa la microsoudeuse dans son logement. Le geste arriva avec le même décalage que la semaine dernière. Un dixième de seconde. L’outil heurta le bord du support avant de se caler.</p>
+        <p>Toujours le même bord, le même côté, le même bruit sourd contre l’aluminium, comme si la main savait depuis la semaine dernière où elle allait rater et s’arrangeait pour rater au même millimètre.</p>
+        <p>Dans le couloir, quelqu’un toussa. Rosâtre. Régulier. Une quinte toutes les neuf secondes. Plus rapide que la semaine dernière.</p>
+</article>
+
+<!-- FIN D’ÉPISODE -->
+<section class="chapter-end">
+    <div class="end-rule"><span>Fin de l’épisode 8</span></div>
+    <div class="registre-card">
+        <div class="registre-title">📋 Registre du Recycleur — Entrée #8</div>
+            <p><em>Composants récupérés : aucun.</em></p>
+            <p><em>Composants vendus : 1 connecteur occipital grade 3 (démonté, 20 mois de stockage, lot 4413). 1 câble à fibre monomode 205 microns (32 cm, usage).</em></p>
+            <p><em>Paiement : 250 CR liquide (clé cryptée, transfert anonyme).</em></p>
+            <p><em>Dépenses : 220 CR (O2 semaine) + 30 CR (remboursement partiel dette).</em></p>
+            <p><em>Note : Client non patient. Composants grade 4 hors catalogue. Connaît numéros de lot et géométrie interne. Cherche signaux au-dessus de 900 MHz. Tarif du silence : au-dessus du mien.</em></p>
+    </div>
+    <div class="ep-banner">
+        <p><em>Partitions Fantômes se déroule huit ans avant <strong>Code d’Inertie</strong> (roman, mars 2027).</em></p>
+        <p><em>Vous lisez cet épisode sept jours avant sa sortie publique.</em></p>
+        <p><em>Prochain épisode le 18 octobre, en avance comme toujours.</em></p>
+    </div>
+    <details class="journal" id="journal">
+        <summary>
+            <span class="journal-label">Journal du Constructeur</span>
+            <span class="journal-hint">coulisses de l&rsquo;&eacute;pisode 8 &mdash; &agrave; lire apr&egrave;s</span>
+            <span class="journal-chevron" aria-hidden="true">&#9660;</span>
+        </summary>
+        <div class="journal-body">
+            <p>L’épisode 8 s’ouvre sur un verrou qui tourne à vide, et tout l’épisode est contenu dans ce geste. Rien n’est cassé, rien ne manque, et quelqu’un attend au milieu de la pièce sans toucher à rien. J’ai passé du temps sur cette ouverture, parce que la menace la plus difficile à écrire n’est pas la violence : c’est la compétence. Un intrus qui force une porte vous apprend qu’il est dangereux. Celui qui n’en a pas besoin vous apprend que vos précautions ne comptaient pas.</p>
+            <p>L’épisode 5 décrivait un homme par l’absence d’usure. Celui-ci pousse la méthode d’un cran : l’homme est décrit par l’absence de traces. Pas de marque sur la serrure, pas un regard déplacé, sauf un, une demi-seconde vers le tiroir du bas, détourné trop vite, et cette demi-seconde est la seule erreur qu’il commettra de toute la scène. En Deep POV, un personnage est exactement ce que le narrateur peut lire de lui, ni plus ni moins, et Drev ne lit que les surfaces : l’usure, les traces, ce que les mains font. Alors le client existe par ses gants, son papier thermique plié en quatre, et une liste de composants dont un grade que Drev ne connaissait même pas de nom.</p>
+            <p>Ce que cherche cet homme, l’épisode ne le dit pas, et je ne le dirai pas non plus. Ce que je peux dire : la phrase que Drev note pour lui-même en fin de consultation, un profil complet en une ligne, est une des premières que j’ai écrites de toute la saison. Certains personnages naissent d’une silhouette ; celui-là est né d’une odeur que Drev invente pour le décrire.</p>
+            <p>Il repart par où il est venu. La trace de sang de la semaine dernière, elle, n’est pas complètement partie. L’atelier garde des choses.</p>
+            <p class="journal-sign">C.E. Rochard &middot; Archive R&eacute;seau C3</p>
+        </div>
+    </details>
+
+    <nav class="ep-nav" aria-label="Navigation entre épisodes">
+        <a href="episode-07.html" class="end-btn secondary"><span>&#8592;</span> Épisode 7</a>
+        <a href="transmissions.html" class="end-btn secondary">Sommaire</a>
+        <a href="episode-09.html" class="end-btn">Épisode 9 <span>&#8594;</span></a>
+    </nav>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Olymos — C.E.Rochard</div>
+        <nav class="footer-nav" aria-label="Liens de pied de page">
+            <a href="index.html">Univers</a>
+            <a href="carte-secteurs.html">Carte</a>
+            <a href="chronologie.html">Chronologie</a>
+            <a href="profil-citoyen.html">Profil Citoyen</a>
+            <a href="roman.html">Le Roman</a>
+            <a href="spin-off.html">Le Spin-off</a>
+            <a href="dossier-omnis.html">Archives Classifiées</a>
+            <a href="a-propos.html">L’auteur</a>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="politique-confidentialite.html">Confidentialité</a>
+        </nav>
+        <p class="footer-copy">Copyright &copy; 2026 &mdash; C.E.Rochard. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème clair/sombre" aria-pressed="false" title="Basculer le thème">
+    <span class="icon-sun">&#9728;</span>
+    <span class="icon-moon">&#9790;</span>
+</button>
+
+<script>
+/* ── Accréditation C3 : activation par lien, puis contrôle ── */
+(function() {
+    var ok = false;
+    try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('acces') === 'c3') {
+            localStorage.setItem('olymos-acces', 'c3');
+            params.delete('acces');
+            var q = params.toString();
+            window.history.replaceState({}, '',
+                window.location.pathname + (q ? '?' + q : '') + window.location.hash);
+        }
+        ok = (localStorage.getItem('olymos-acces') === 'c3');
+    } catch (e) { ok = false; }
+
+    if (!ok) {
+        var overlay = document.getElementById('gateOverlay');
+        if (overlay) {
+            overlay.classList.add('active');
+            document.body.classList.add('locked');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+})();
+</script>
+
+<script>
+/* ── Thème clair / sombre ── */
+(function() {
+    var toggle = document.getElementById('themeToggle');
+    var saved = null;
+    try { saved = localStorage.getItem('dossier-theme'); } catch (e) {}
+    if (saved === 'light') {
+        document.documentElement.classList.add('light');
+        toggle.setAttribute('aria-pressed', 'true');
+    }
+    toggle.addEventListener('click', function() {
+        var isLight = document.documentElement.classList.toggle('light');
+        toggle.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        try { localStorage.setItem('dossier-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+    });
+})();
+</script>
+
+<script>
+/* ── Progression de lecture ── */
+(function() {
+    var bar = document.getElementById('progressBar');
+    var article = document.getElementById('chapterBody');
+    if (!bar || !article) return;
+
+    function update() {
+        var start = article.offsetTop;
+        var span = article.offsetHeight - window.innerHeight + 200;
+        var pos = window.scrollY - start + 200;
+        var pct = span > 0 ? (pos / span) * 100 : 0;
+        bar.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+})();
+</script>
+
+<script>
+/* ── Menu hamburger mobile ── */
+(function() {
+    var btn = document.getElementById('navHamburger');
+    var overlay = document.getElementById('navMobileOverlay');
+    var closeBtn = document.getElementById('navMobileClose');
+    if (!btn || !overlay) return;
+    function openMenu() {
+        btn.classList.add('open'); overlay.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+        btn.classList.remove('open'); overlay.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+    btn.addEventListener('click', function() {
+        if (overlay.classList.contains('open')) closeMenu(); else openMenu();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    overlay.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', closeMenu);
+    });
+})();
+</script>
+
+</body>
+</html>
